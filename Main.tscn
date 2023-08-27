@@ -1,0 +1,66 @@
+[gd_scene load_steps=9 format=3 uid="uid://bxqash7cpuut5"]
+
+[ext_resource type="Script" path="res://Modules/Core/TwitchService.cs" id="1_ekoa5"]
+[ext_resource type="Script" path="res://Modules/Core/BeepoCore.cs" id="2_py2px"]
+[ext_resource type="Texture2D" uid="uid://c5sv75uk780g4" path="res://beepo.png" id="3_1d4df"]
+[ext_resource type="Script" path="res://Modules/ChatCommands/ChatCommandTest.cs" id="3_jjesa"]
+[ext_resource type="Script" path="res://Modules/RaidEvents/RaidEventTest.cs" id="4_age4s"]
+[ext_resource type="Script" path="res://Modules/ChannelRedeems/ChannelRedeemTest.cs" id="5_wxr81"]
+[ext_resource type="Script" path="res://Modules/Core/MicInputDetection.cs" id="7_6f56n"]
+
+[sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_cyfpr"]
+
+[node name="World" type="Node3D"]
+
+[node name="TwitchService" type="Node" parent="."]
+script = ExtResource("1_ekoa5")
+twitchClientID = "65016wodmk6fldrrscoq0amo6pbkgv"
+debugPackets = false
+
+[node name="BeepoCore" type="Node" parent="." node_paths=PackedStringArray("twitchService", "debugTextWindow")]
+unique_name_in_owner = true
+script = ExtResource("2_py2px")
+twitchService = NodePath("../TwitchService")
+debugTextWindow = NodePath("../DebugWindow")
+
+[node name="TestCommand" type="Node" parent="BeepoCore"]
+script = ExtResource("3_jjesa")
+commandName = "testma"
+
+[node name="TestRaidEvent" type="Node" parent="BeepoCore"]
+script = ExtResource("4_age4s")
+
+[node name="TestChannelRedeem" type="Node" parent="BeepoCore"]
+script = ExtResource("5_wxr81")
+redeemTitle = "Pats"
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+texture_filter = 0
+texture = ExtResource("3_1d4df")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+
+[node name="DebugWindow" type="TextEdit" parent="."]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 383.0
+offset_bottom = 375.0
+theme_override_colors/font_readonly_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 10
+text = "Welcome to OpenBeepoBox
+
+"
+editable = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
+wrap_mode = 1
+
+[node name="MicAudioStream" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamMicrophone_cyfpr")
+autoplay = true
+mix_target = 2
+bus = &"Mic"
+script = ExtResource("7_6f56n")
+captureInput = true
