@@ -5,6 +5,6 @@ public partial class ChannelRedeemTest : ChannelRedeemNode
 {
     public override void ExecuteChannelRedeem(ChannelRedeemPayload payload)
     {
-        beepoCore.SendTwitchMessage("Thanks for the " + payload.title + " " + payload.displayname);
+        BeepoCore.Instance.SendTwitchMessage("Thanks for the " + payload.title + " " + payload.displayname);
     }
 }

@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 public partial class BeepoCore : Node
 {
+    private static BeepoCore _instance;
+    public static BeepoCore Instance { get { return _instance; } }
+
     [Export] private char commandPrefix = '!';
     [Export] private TwitchService twitchService;
     [Export] private TextEdit debugTextWindow;
@@ -13,6 +16,12 @@ public partial class BeepoCore : Node
     private GDC.Dictionary<string, ChannelRedeemNode> channelRedeems = new GDC.Dictionary<string, ChannelRedeemNode>();
     private List<RaidEventNode> raidEvents = new List<RaidEventNode>();
 
+    public static List<BeepoAvatar> currentAvatars = new List<BeepoAvatar>();
+
+    public override void _EnterTree()
+    {
+        _instance = this;
+    }
 
     public override void _Ready()
     {
@@ -114,6 +123,6 @@ public partial class BeepoCore : Node
 
     public void SendTwitchMessage(string newMessage)
     {
-        twitchService.ClientIRCSend("PRIVMSG #" + twitchService.twitchUsername + " :" + newMessage);
+        twitchService.twitchServiceIRC.ClientIRCSend("PRIVMSG #" + twitchService.twitchUsername + " :" + newMessage);
     }
 }

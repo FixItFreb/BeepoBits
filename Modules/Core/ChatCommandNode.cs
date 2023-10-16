@@ -24,17 +24,14 @@ public partial class ChatCommandNode : Node
     [Export] public string commandName;
     [Export] public TwitchBadge requiredBadges;
 
-    protected BeepoCore beepoCore;
-
     public override void _Ready()
     {
-        beepoCore = GetNode<BeepoCore>("%BeepoCore");
-        beepoCore.RegisterChatCommand(this);
+        BeepoCore.Instance.RegisterChatCommand(this);
     }
 
     public override void _ExitTree()
     {
-        beepoCore.UnregisterChatCommand(this);
+        BeepoCore.Instance.UnregisterChatCommand(this);
     }
 
     public virtual void ExecuteCommand(ChatCommandPayload payload)

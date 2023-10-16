@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3 uid="uid://ct8qu0j3b5uoa"]
+
+[ext_resource type="Script" path="res://Modules/Core/BeepoCore.cs" id="1_ltca3"]
+[ext_resource type="Script" path="res://Modules/Core/Twitch/TwitchService.cs" id="2_1ujbl"]
+
+[node name="BeepoCore" type="Node" node_paths=PackedStringArray("twitchService", "debugTextWindow")]
+script = ExtResource("1_ltca3")
+twitchService = NodePath("TwitchService")
+debugTextWindow = NodePath("DebugWindow")
+
+[node name="TwitchService" type="Node" parent="."]
+script = ExtResource("2_1ujbl")
+twitchClientID = "65016wodmk6fldrrscoq0amo6pbkgv"
+debugPackets = false
+
+[node name="DebugWindow" type="TextEdit" parent="."]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 383.0
+offset_bottom = 375.0
+theme_override_colors/font_readonly_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 10
+text = "Welcome to OpenBeepoBox
+
+"
+editable = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
+wrap_mode = 1

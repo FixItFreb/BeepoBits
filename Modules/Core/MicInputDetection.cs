@@ -3,9 +3,23 @@ using System;
 
 public partial class MicInputDetection : AudioStreamPlayer
 {
+    private static MicInputDetection _instance;
+    public static MicInputDetection Instance { get { return _instance; } }
+
     [Export] public bool captureInput = false;
     private AudioEffectCapture captureEffect;
     private int micBusIndex = -1;
+    private bool micOpen = false;
+
+    [Export] public float micThreshold = 0.5f;
+
+    [Signal] public delegate void MicOpenEventHandler();
+    [Signal] public delegate void MicCloseEventHandler();
+
+    public override void _EnterTree()
+    {
+        _instance = this;
+    }
 
     public override void _Ready()
     {
@@ -17,7 +31,6 @@ public partial class MicInputDetection : AudioStreamPlayer
         {
             GD.Print("Device " + i + " : " + inputs[i]);
         }
-        //AudioServer.InputDevice = "Microphone (2- USB Audio Device)";
     }
 
     public override void _Process(double delta)
@@ -34,6 +47,20 @@ public partial class MicInputDetection : AudioStreamPlayer
                     sum += v.Abs();
                 }
                 sum /= sampleSize;
+            }
+
+            if(sum.Length() >= micThreshold)
+            {
+                if(!micOpen)
+                {
+                    micOpen = true;
+                    EmitSignal(SignalName.MicOpen);
+                }
+            }
+            else if(micOpen)
+            {
+                micOpen = false;
+                EmitSignal(SignalName.MicClose);
             }
             //GD.Print("Mic Input: " + sum.ToString("0.000000"));
         }

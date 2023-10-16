@@ -7,6 +7,6 @@ public partial class ChatCommandTest : ChatCommandNode
     {
         string testString = string.Format("{0} executed the testma command!", payload.displayname);
         GD.Print(testString);
-        beepoCore.SendTwitchMessage(testString);
+        BeepoCore.Instance.SendTwitchMessage(testString);
     }
 }

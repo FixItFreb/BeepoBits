@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://ngokm283exep"]
-
-[ext_resource type="Script" path="res://Modules/Core/TwitchService.gd" id="1_ixuk2"]
-
-[node name="Node3D" type="Node3D"]
-
-[node name="Node" type="Node" parent="."]
-script = ExtResource("1_ixuk2")
-twitch_client_id = "65016wodmk6fldrrscoq0amo6pbkgv"

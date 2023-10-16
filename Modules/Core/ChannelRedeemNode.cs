@@ -21,17 +21,14 @@ public partial class ChannelRedeemNode : Node
 {
     [Export] public string redeemTitle;
 
-    protected BeepoCore beepoCore;
-
     public override void _Ready()
     {
-        beepoCore = GetNode<BeepoCore>("%BeepoCore");
-        beepoCore.RegisterChannelRedeem(this);
+        BeepoCore.Instance.RegisterChannelRedeem(this);
     }
 
     public override void _ExitTree()
     {
-        beepoCore.UnregisterChannelRedeem(this);
+        BeepoCore.Instance.UnregisterChannelRedeem(this);
     }
 
     public virtual void ExecuteChannelRedeem(ChannelRedeemPayload payload)

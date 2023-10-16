@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://dp0eld2tutl30"]
+
+[ext_resource type="Script" path="res://Modules/Features/Throwing/Throwable.cs" id="1_72ieg"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_8ivsj"]
+bounce = 0.2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_j724x"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q4chg"]
+resource_local_to_scene = true
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_s5cqh"]
+radius = 0.25
+height = 1.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_q5l18"]
+playback_mode = 1
+random_pitch = 1.0
+random_volume_offset_db = 0.0
+
+[node name="BaseThrowable" type="RigidBody3D" node_paths=PackedStringArray("collider", "throwAudio")]
+physics_material_override = SubResource("PhysicsMaterial_8ivsj")
+max_contacts_reported = 256
+contact_monitor = true
+freeze_mode = 1
+script = ExtResource("1_72ieg")
+collider = NodePath("Collider")
+throwAudio = NodePath("ThrowableImpactAudio")
+
+[node name="Collider" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_j724x")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_q4chg")
+mesh = SubResource("CapsuleMesh_s5cqh")
+
+[node name="ThrowableImpactAudio" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamRandomizer_q5l18")

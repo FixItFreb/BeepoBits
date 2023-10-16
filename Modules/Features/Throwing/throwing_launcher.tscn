@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://bq4fme2rh6lm3"]
+
+[ext_resource type="Script" path="res://Modules/Features/Throwing/ThrowingLauncher.cs" id="1_acnf4"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_d3msn"]
+
+[node name="Launcher_01" type="Node3D"]
+script = ExtResource("1_acnf4")
+
+[node name="LauncherArrowMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(-6.68864e-05, -0.000257691, 0.0999999, -0.7, -0.000385073, -9.56585e-06, 0.000299518, -0.9, -2.86287e-05, -7.45058e-09, 0, 0)
+layers = 524288
+mesh = SubResource("PrismMesh_d3msn")

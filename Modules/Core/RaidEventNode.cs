@@ -17,17 +17,14 @@ public class RaidEventPayload
 
 public partial class RaidEventNode : Node
 {
-    protected BeepoCore beepoCore;
-
     public override void _Ready()
     {
-        beepoCore = GetNode<BeepoCore>("%BeepoCore");
-        beepoCore.RegisterRaidEvent(this);
+        BeepoCore.Instance.RegisterRaidEvent(this);
     }
 
     public override void _ExitTree()
     {
-        beepoCore.UnregisterRaidEvent(this);
+        BeepoCore.Instance.UnregisterRaidEvent(this);
     }
 
     public virtual void ExecuteRaidEvent(RaidEventPayload payload)
