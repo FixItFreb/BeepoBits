@@ -17,6 +17,8 @@ public partial class TwitchService : Node
 {
     // Static Variables
     public static float twitchConnectRetryTime = 5.0f;
+    private static TwitchService _instance;
+    public static TwitchService Instance { get { return _instance; } }
 
     // Config Variables
 
@@ -102,6 +104,7 @@ public partial class TwitchService : Node
     public TwitchService_IRC twitchServiceIRC = new TwitchService_IRC();
     public TwitchService_EventSub twitchServiceEventSub = new TwitchService_EventSub();
     public TwitchService_Users twitchServiceUsers = new TwitchService_Users();
+    public TwitchService_Emotes twitchServiceEmotes = new TwitchService_Emotes();
     #endregion
 
     # region Constants
@@ -263,6 +266,11 @@ public partial class TwitchService : Node
     #endregion
 
     #region Normal Node entry points
+    public override void _EnterTree()
+    {
+        _instance = this;
+    }
+    
     public override void _Ready()
     {
         if(autoLoadCredentials)
@@ -280,6 +288,7 @@ public partial class TwitchService : Node
         twitchServicePubSub.Init(this);
         twitchServiceIRC.Init(this);
         twitchServiceEventSub.Init(this);
+        twitchServiceEmotes.Init(this);
     }
 
     public override void _Process(double delta)
@@ -306,6 +315,9 @@ public partial class TwitchService : Node
 
         // Update users
         twitchServiceUsers.Update(delta);
+
+        // Emotes
+        twitchServiceEmotes.Update(delta);
     }
     #endregion
 }

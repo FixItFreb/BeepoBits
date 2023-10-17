@@ -189,17 +189,17 @@ public partial class TwitchService_PubSub : RefCounted
                 // Whatever happens, set a default reconnect delay
                 clientPubSubTimeToReconnect = ClientPubSubTimeToReconnectDefault;
             }
-            else
-            {
-                clientPubSubTimeToPing -= delta;
-                if (clientPubSubTimeToPing < 0.0f)
-                {
-                    clientPubSubTimeToPing = ClientPubSubTimeToPingDefault;
-                    ClientPubSubSendPing();
-                }
-            }
-
-            clientPubSub.Poll();
         }
+        else
+        {
+            clientPubSubTimeToPing -= delta;
+            if (clientPubSubTimeToPing < 0.0f)
+            {
+                clientPubSubTimeToPing = ClientPubSubTimeToPingDefault;
+                ClientPubSubSendPing();
+            }
+        }
+
+        clientPubSub.Poll();
     }
 }

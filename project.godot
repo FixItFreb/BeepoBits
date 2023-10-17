@@ -31,6 +31,10 @@ window/size/always_on_top=true
 
 project/assembly_name="OpenBeepoBox"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gif-importer/plugin.cfg")
+
 [input]
 
 debug_action={

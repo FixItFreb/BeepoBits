@@ -79,6 +79,21 @@ public partial class TwitchService_EventSub : RefCounted
     private void ClientEventSubHandleConnectionEstablished(int peerID)
     {
         Dictionary channelUpdateRegistrationJson = new Dictionary();
+        // {
+        //     {"type", "channel.update"},
+        //     {"version", "2"},
+        //     {"condition", new Dictionary()
+        //         {
+        //             {"broadcaster_user_id", twitchService.TwitchUserID.ToString()}
+        //         }
+        //     }
+        //     {"transport", new Dictionary()
+        //         {
+        //             {"method", "websocket"},
+        //             {"seesion_id", eventSubSessionID}
+        //         }
+        //     }
+        // };
         channelUpdateRegistrationJson.Add("type", "channel.update");
         channelUpdateRegistrationJson.Add("version", "2");
         Dictionary conditionData = new Dictionary();
