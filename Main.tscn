@@ -61,6 +61,14 @@ transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, 
 [node name="HeadPosition" parent="AvatarAnchor/BeepoAvatar" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
+[node name="BeepoAvatarPNG" parent="AvatarAnchor/BeepoAvatar" index="1"]
+gravity_scale = 0.0
+lock_rotation = true
+freeze = false
+frequencyX = 0.14
+frequencyY = 0.21
+jumpMagnitude = 1.5
+
 [node name="AvatarSprite" parent="AvatarAnchor/BeepoAvatar/BeepoAvatarPNG" index="0"]
 texture = ExtResource("3_1d4df")
 
@@ -79,5 +87,8 @@ mix_target = 2
 bus = &"Mic"
 script = ExtResource("7_6f56n")
 captureInput = true
+
+[connection signal="MicClose" from="MicAudioStream" to="AvatarAnchor/BeepoAvatar/BeepoAvatarPNG" method="StopSpeaking"]
+[connection signal="MicOpen" from="MicAudioStream" to="AvatarAnchor/BeepoAvatar/BeepoAvatarPNG" method="StartSpeaking"]
 
 [editable path="AvatarAnchor/BeepoAvatar"]
