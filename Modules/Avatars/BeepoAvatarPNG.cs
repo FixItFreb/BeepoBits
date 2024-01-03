@@ -13,6 +13,8 @@ public partial class BeepoAvatarPNG : RigidBody3D
     [Export] private CollisionShape3D collider;
 
     // Movement configuration
+    [Export] private bool enableHover = false;
+    [Export] private bool enableJump = false;
     [Export] private double frequencyX = 0;
     [Export] private double magnitudeX = 1;
     [Export] private double frequencyY = 0;
@@ -35,7 +37,7 @@ public partial class BeepoAvatarPNG : RigidBody3D
 
     public void StartSpeaking()
     {
-        if (jumpProgress >= Math.PI) jumpProgress = 0; // Only start another jump if the previous one already finished
+        if (enableJump && jumpProgress >= Math.PI) jumpProgress = 0; // Only start another jump if the previous one already finished
     }
 
     public void StopSpeaking()
@@ -49,15 +51,19 @@ public partial class BeepoAvatarPNG : RigidBody3D
 
     public override void _PhysicsProcess(double delta)
     {
-        hoveringProgress += delta;
-        var offsetY = Math.Sin(hoveringProgress * frequencyY) * magnitudeY;
-        var offsetX = Math.Sin(hoveringProgress * frequencyX) * magnitudeX;
-
         var desiredPosition = originalPosition;
-        desiredPosition.X += (float)offsetX;
-        desiredPosition.Y += (float)offsetY;
 
-        if (jumpProgress < Math.PI) // Using a sine function for the jump which returns to 0 at x=PI
+        if (enableHover)
+        {
+            hoveringProgress += delta;
+            var offsetY = Math.Sin(hoveringProgress * frequencyY) * magnitudeY;
+            var offsetX = Math.Sin(hoveringProgress * frequencyX) * magnitudeX;
+
+            desiredPosition.X += (float)offsetX;
+            desiredPosition.Y += (float)offsetY;
+        }
+
+        if (enableJump && jumpProgress < Math.PI) // Using a sine function for the jump which returns to 0 at x=PI
         {
             jumpProgress += delta * 3;
             var offsetJump = Math.Sin(jumpProgress) * jumpMagnitude;
