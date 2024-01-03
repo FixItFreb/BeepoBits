@@ -21,7 +21,6 @@ public partial class BeepoAvatarPNG : RigidBody3D
 
     // Movement state
     private Vector3 originalPosition = Vector3.Zero;
-    private RigidBody3D node;
     private double hoveringProgress = 0;
     private double jumpProgress = 4; // set to 4 so we're not jumping by default
 
@@ -45,8 +44,7 @@ public partial class BeepoAvatarPNG : RigidBody3D
 
     public override void _Ready()
     {
-        node = (RigidBody3D)GetNode(".");
-        originalPosition = node.GlobalPosition;
+        originalPosition = GlobalPosition;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -66,7 +64,7 @@ public partial class BeepoAvatarPNG : RigidBody3D
             desiredPosition.Y += (float)offsetJump;
         }
 
-        node.ApplyForce(calculatePIDForce(delta, node.GlobalPosition, desiredPosition));
+        ApplyForce(calculatePIDForce(delta, GlobalPosition, desiredPosition));
     }
 
     private Vector3 calculatePIDForce(double delta, Vector3 currentPosition, Vector3 desiredPosition)
