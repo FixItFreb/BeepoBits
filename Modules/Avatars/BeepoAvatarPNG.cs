@@ -25,9 +25,9 @@ public partial class BeepoAvatarPNG : RigidBody3D
     private double jumpProgress = 4; // set to 4 so we're not jumping by default
 
     // PID stuff
-    private float proportionalGain = 10.0f;
+    private float proportionalGain = 20.0f;
     private float integralGain = 0.01f;
-    private float derivativeGain = 5.0f;
+    private float derivativeGain = 8.0f;
     private Vector3 lastError = Vector3.Zero;
     private Vector3 integrationStored = Vector3.Zero;
     private float integrationClamp = 10.0f;
