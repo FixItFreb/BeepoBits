@@ -1,7 +1,7 @@
 using Godot;
 using System;
-using System.IO.Pipes;
 
+[Tool]
 public partial class BeepoAvatarPNG : RigidBody3D
 {
     [Export] private BeepoAvatar avatar;
@@ -11,6 +11,11 @@ public partial class BeepoAvatarPNG : RigidBody3D
     public Sprite3D AvatarSprite { get { return avatarSprite; } }
 
     [Export] private CollisionShape3D collider;
+
+    // Sprite changing
+    private Texture2D silentTexture;
+    [Export] public Texture2D SilentTexture { get => silentTexture; set { silentTexture = value; avatarSprite.Texture = value; } }
+    [Export] private Texture2D speakingTexture;
 
     // Movement configuration
     [Export] private bool enableHover = false;
@@ -29,7 +34,7 @@ public partial class BeepoAvatarPNG : RigidBody3D
     // PID stuff
     private float proportionalGain = 20.0f;
     private float integralGain = 0.01f;
-    private float derivativeGain = 8.0f;
+    private float derivativeGain = 10.0f;
     private Vector3 lastError = Vector3.Zero;
     private Vector3 integrationStored = Vector3.Zero;
     private float integrationClamp = 10.0f;
@@ -38,10 +43,12 @@ public partial class BeepoAvatarPNG : RigidBody3D
     public void StartSpeaking()
     {
         if (enableJump && jumpProgress >= Math.PI) jumpProgress = 0; // Only start another jump if the previous one already finished
+        avatarSprite.Texture = speakingTexture;
     }
 
     public void StopSpeaking()
     {
+        avatarSprite.Texture = silentTexture;
     }
 
     public override void _Ready()
