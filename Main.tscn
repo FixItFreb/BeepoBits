@@ -73,6 +73,7 @@ jumpMagnitude = 1.5
 
 [node name="AvatarSprite" parent="AvatarAnchor/BeepoAvatar/BeepoAvatarPNG" index="0"]
 texture = ExtResource("3_1d4df")
+speakingTexture = ExtResource("3_1d4df")
 
 [node name="Collider" parent="AvatarAnchor/BeepoAvatar/BeepoAvatarPNG" index="1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)

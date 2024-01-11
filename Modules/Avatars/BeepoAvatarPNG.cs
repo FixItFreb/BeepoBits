@@ -1,21 +1,15 @@
 using Godot;
 using System;
 
-[Tool]
 public partial class BeepoAvatarPNG : RigidBody3D
 {
     [Export] private BeepoAvatar avatar;
     public BeepoAvatar Avatar { get { return avatar; } }
 
-    [Export] private Sprite3D avatarSprite;
-    public Sprite3D AvatarSprite { get { return avatarSprite; } }
+    [Export] private AvatarSprite avatarSprite;
+    public AvatarSprite AvatarSprite { get { return avatarSprite; } }
 
     [Export] private CollisionShape3D collider;
-
-    // Sprite changing
-    private Texture2D silentTexture;
-    [Export] public Texture2D SilentTexture { get => silentTexture; set { silentTexture = value; avatarSprite.Texture = value; } }
-    [Export] private Texture2D speakingTexture;
 
     // Movement configuration
     [Export] private bool enableHover = false;
@@ -24,7 +18,7 @@ public partial class BeepoAvatarPNG : RigidBody3D
     [Export] private double magnitudeX = 1;
     [Export] private double frequencyY = 0;
     [Export] private double magnitudeY = 1;
-    [Export] private double jumpMagnitude = 2.5;
+    [Export] private double jumpMagnitude = 1.5;
 
     // Movement state
     private Vector3 originalPosition = Vector3.Zero;
@@ -43,12 +37,12 @@ public partial class BeepoAvatarPNG : RigidBody3D
     public void StartSpeaking()
     {
         if (enableJump && jumpProgress >= Math.PI) jumpProgress = 0; // Only start another jump if the previous one already finished
-        avatarSprite.Texture = speakingTexture;
+        avatarSprite.StartSpeaking();
     }
 
     public void StopSpeaking()
     {
-        avatarSprite.Texture = silentTexture;
+        avatarSprite.StopSpeaking();
     }
 
     public override void _Ready()
