@@ -6,8 +6,8 @@ public partial class BeepoAvatarPNG : RigidBody3D
     [Export] private BeepoAvatar avatar;
     public BeepoAvatar Avatar { get { return avatar; } }
 
-    [Export] private AvatarSprite avatarSprite;
-    public AvatarSprite AvatarSprite { get { return avatarSprite; } }
+    [Export] private Sprite3D avatarSprite;
+    public Sprite3D AvatarSprite { get { return avatarSprite; } }
 
     [Export] private CollisionShape3D collider;
 
@@ -37,12 +37,10 @@ public partial class BeepoAvatarPNG : RigidBody3D
     public void StartSpeaking()
     {
         if (enableJump && jumpProgress >= Math.PI) jumpProgress = 0; // Only start another jump if the previous one already finished
-        avatarSprite.StartSpeaking();
     }
 
     public void StopSpeaking()
     {
-        avatarSprite.StopSpeaking();
     }
 
     public override void _Ready()
