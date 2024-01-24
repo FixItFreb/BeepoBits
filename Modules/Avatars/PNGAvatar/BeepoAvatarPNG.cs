@@ -1,16 +1,15 @@
 using Godot;
+using Godot.Collections;
 using System;
-using System.IO.Pipes;
+using System.Linq;
+using System.Collections.Generic;
 
 public partial class BeepoAvatarPNG : RigidBody3D
 {
     [Export] private BeepoAvatar avatar;
     public BeepoAvatar Avatar { get { return avatar; } }
-
-    [Export] private Sprite3D avatarSprite;
-    public Sprite3D AvatarSprite { get { return avatarSprite; } }
-
-    [Export] private CollisionShape3D collider;
+    private Array<PNGBone> bones;
+    private SpeechState currentSpeech = SpeechState.NotSpeaking;
 
     // Movement configuration
     [Export] private bool enableHover = false;
@@ -38,15 +37,38 @@ public partial class BeepoAvatarPNG : RigidBody3D
     public void StartSpeaking()
     {
         if (enableJump && jumpProgress >= Math.PI) jumpProgress = 0; // Only start another jump if the previous one already finished
+        currentSpeech = SpeechState.Speaking;
+        UpdateSprites();
     }
 
     public void StopSpeaking()
     {
+        currentSpeech = SpeechState.NotSpeaking;
+        UpdateSprites();
+    }
+
+    public void UpdateSprites()
+    {
+        foreach (PNGBone bones in bones)
+        {
+            bones.UpdateSpeech(currentSpeech);
+        }
     }
 
     public override void _Ready()
     {
         originalPosition = GlobalPosition;
+
+        // find all avatar bones
+        Array<Node> children = GetChildren();
+        IEnumerable<Node> foundBones = children.Where(child => child is PNGBone);
+        bones = new Array<PNGBone>(foundBones.Cast<PNGBone>());
+        UpdateSprites();
+    }
+
+    public override void _Process(double delta)
+    {
+
     }
 
     public override void _PhysicsProcess(double delta)

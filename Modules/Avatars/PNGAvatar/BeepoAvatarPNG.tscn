@@ -1,0 +1,32 @@
+[gd_scene load_steps=7 format=3 uid="uid://bpc5c5r478dc3"]
+
+[ext_resource type="PackedScene" uid="uid://i33olrb0q1r3" path="res://Modules/Avatars/BeepoAvatar.tscn" id="1_ycvb2"]
+[ext_resource type="Script" path="res://Modules/Avatars/PNGAvatar/BeepoAvatarPNG.cs" id="2_apauq"]
+[ext_resource type="Script" path="res://Modules/Avatars/PNGAvatar/PNGBone.cs" id="3_ml7lu"]
+[ext_resource type="Texture2D" uid="uid://c5sv75uk780g4" path="res://beepo.png" id="4_2eund"]
+[ext_resource type="Script" path="res://Modules/Avatars/PNGAvatar/PNGSpriteSegment.cs" id="4_kkqtg"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lcova"]
+size = Vector3(1, 7.43414, 1)
+
+[node name="BeepoAvatar" instance=ExtResource("1_ycvb2")]
+
+[node name="BeepoAvatarPNG" type="RigidBody3D" parent="." index="1" node_paths=PackedStringArray("avatar")]
+freeze = true
+freeze_mode = 1
+max_contacts_reported = 256
+contact_monitor = true
+script = ExtResource("2_apauq")
+avatar = NodePath("..")
+
+[node name="PNGBone" type="Node3D" parent="BeepoAvatarPNG" index="0"]
+script = ExtResource("3_ml7lu")
+
+[node name="PNGSpriteSegment" type="Sprite3D" parent="BeepoAvatarPNG/PNGBone" index="0"]
+texture = ExtResource("4_2eund")
+script = ExtResource("4_kkqtg")
+speech = 1
+costume = PackedInt32Array(0, 1)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BeepoAvatarPNG" index="1"]
+shape = SubResource("BoxShape3D_lcova")
