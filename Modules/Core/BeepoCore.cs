@@ -18,6 +18,9 @@ public partial class BeepoCore : Node
 
     public static List<BeepoAvatar> currentAvatars = new List<BeepoAvatar>();
 
+    [Signal] public delegate void NewAvatarRegisteredEventHandler(BeepoAvatar newAvatar);
+    [Signal] public delegate void AvatarUnregisteredEventHandler(BeepoAvatar avatar);
+
     public override void _EnterTree()
     {
         _instance = this;
@@ -124,5 +127,25 @@ public partial class BeepoCore : Node
     public void SendTwitchMessage(string newMessage)
     {
         twitchService.twitchServiceIRC.ClientIRCSend("PRIVMSG #" + twitchService.twitchUsername + " :" + newMessage);
+    }
+
+    public static void RegisterNewAvatar(BeepoAvatar newAvatar)
+    {
+        if(currentAvatars.Contains(newAvatar))
+        {
+            return;
+        }
+
+        currentAvatars.Add(newAvatar);
+        _instance.EmitSignal(BeepoCore.SignalName.NewAvatarRegistered, newAvatar);
+    }
+
+    public static void UnregisterAvatar(BeepoAvatar avatar)
+    {
+        if (currentAvatars.Contains(avatar))
+        {
+            currentAvatars.Remove(avatar);
+            _instance.EmitSignal(BeepoCore.SignalName.AvatarUnregistered, avatar);
+        }
     }
 }

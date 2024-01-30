@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://b0psdmmkau57r"]
+
+[node name="Toolbox" type="Window"]
+title = "Toolbox"
+initial_position = 4
+size = Vector2i(250, 500)
+always_on_top = true
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Toolbox"

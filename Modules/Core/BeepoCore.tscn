@@ -14,6 +14,7 @@ twitchClientID = "65016wodmk6fldrrscoq0amo6pbkgv"
 debugPackets = false
 
 [node name="DebugWindow" type="TextEdit" parent="."]
+visible = false
 offset_left = 5.0
 offset_top = 5.0
 offset_right = 383.0

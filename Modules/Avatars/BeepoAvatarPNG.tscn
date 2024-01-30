@@ -8,10 +8,10 @@
 [node name="BeepoAvatar" instance=ExtResource("1_ycvb2")]
 
 [node name="BeepoAvatarPNG" type="RigidBody3D" parent="." index="1" node_paths=PackedStringArray("avatar", "avatarSprite", "collider")]
-max_contacts_reported = 256
-contact_monitor = true
 freeze = true
 freeze_mode = 1
+max_contacts_reported = 256
+contact_monitor = true
 script = ExtResource("2_apauq")
 avatar = NodePath("..")
 avatarSprite = NodePath("AvatarSprite")
