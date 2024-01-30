@@ -6,6 +6,7 @@ public partial class MicInputDetection : AudioStreamPlayer
     private static MicInputDetection _instance;
     public static MicInputDetection Instance { get { return _instance; } }
 
+    [Export] private Timer micOffTimer;
     [Export] public bool captureInput = false;
     private AudioEffectCapture captureEffect;
     private int micBusIndex = -1;
@@ -15,6 +16,12 @@ public partial class MicInputDetection : AudioStreamPlayer
 
     [Signal] public delegate void MicOpenEventHandler();
     [Signal] public delegate void MicCloseEventHandler();
+
+    private void StopMic()
+    {
+        EmitSignal(SignalName.MicClose);
+        micOpen = false;
+    }
 
     public override void _EnterTree()
     {
@@ -35,7 +42,7 @@ public partial class MicInputDetection : AudioStreamPlayer
 
     public override void _Process(double delta)
     {
-        if(captureInput)
+        if (captureInput)
         {
             int sampleSize = captureEffect.GetFramesAvailable();
             Vector2[] values = captureEffect.GetBuffer(sampleSize);
@@ -49,18 +56,14 @@ public partial class MicInputDetection : AudioStreamPlayer
                 sum /= sampleSize;
             }
 
-            if(sum.Length() >= micThreshold)
+            if (sum.Length() >= micThreshold)
             {
-                if(!micOpen)
+                micOffTimer.Start();
+                if (!micOpen)
                 {
                     micOpen = true;
                     EmitSignal(SignalName.MicOpen);
                 }
-            }
-            else if(micOpen)
-            {
-                micOpen = false;
-                EmitSignal(SignalName.MicClose);
             }
             //GD.Print("Mic Input: " + sum.ToString("0.000000"));
         }
