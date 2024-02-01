@@ -12,7 +12,7 @@ public partial class TwitchEmote : Resource
         GD.Print("Caching: " + emoteName);
         TwitchEmote newEmote = new TwitchEmote();
 
-        GDScript gifReaderScript = (GDScript)GD.Load("res://Addons/gif-importer/GIFReader.gd");
+        GDScript gifReaderScript = (GDScript)GD.Load("res://addons/gif-importer/GIFReader.gd");
         GodotObject gifReader = (GodotObject)gifReaderScript.New();
 
         AnimatedTexture animTex = null;

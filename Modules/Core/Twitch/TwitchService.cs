@@ -4,15 +4,6 @@ using System;
 using System.Collections.Generic;
 using GDArray = Godot.Collections.Array;
 
-[Flags] public enum TwitchBadge
-{
-    None = 0x0,
-    Broadcaster = 0x1,
-    Moderator = 0x2,
-    Subscriber = 0x4,
-    VIP = 0x8,
-}
-
 public partial class TwitchService : Node
 {
     // Static Variables
@@ -67,36 +58,44 @@ public partial class TwitchService : Node
     /// <summary>
     /// Emitted when a user uses bits to cheer.
     /// </summary>
-    /// <param name="fromUsername"></param>
-    /// <param name="fromDisplayName"></param>
-    /// <param name="message"></param>
-    /// <param name="bits"></param>
-    /// <param name="badges"></param>
-    [Signal] public delegate void ChannelChatMessageEventHandler(string fromUsername, string fromDisplayName, string message, int bits, int badges);
+    /// <param name="payload"></param>
+    [Signal] public delegate void ChannelChatMessageEventHandler(TwitchChatMessagePayload payload);
 
     /// <summary>
     /// Emitted when a user redeems a channel point redeem.
     /// </summary>
-    /// <param name="redeemTitle"></param>
-    /// <param name="redeemerUsername"></param>
-    /// <param name="redeemerDisplayName"></param>
-    /// <param name="userInput"></param>
-    [Signal] public delegate void ChannelPointsRedeemEventHandler(string redeemTitle, string redeemerUsername, string redeemerDisplayName, string userInput);
+    /// <param name="payload"></param>
+    [Signal] public delegate void ChannelPointsRedeemEventHandler(TwitchRedeemPayload payload);
 
     /// <summary>
     /// Emitted when another user raids your channel.
     /// </summary>
-    /// <param name="raiderUsername"></param>
-    /// <param name="raiderDisplayName"></param>
-    /// <param name="raiderUserCount"></param>
-    [Signal] public delegate void ChannelRaidEventHandler(string raiderUsername, string raiderDisplayName, string raiderUserCount);
+    /// <param name="payload"></param>
+    [Signal] public delegate void ChannelRaidEventHandler(TwitchRaidPayload payload);
 
     /// <summary>
     /// Emitted when a user follows your channel.
     /// </summary>
-    /// <param name="followerUsername"></param>
-    /// <param name="followerDisplayName"></param>
-    [Signal] public delegate void ChannelUserFollowedEventHandler(string followerUsername, string followerDisplayName);
+    /// <param name="payload"></param>
+    [Signal] public delegate void ChannelUserFollowedEventHandler(TwitchFollowPayload payload);
+
+    /// <summary>
+    /// Emitted when a user subscribes to your channel.
+    /// </summary>
+    /// <param name="payload"></param>
+    [Signal] public delegate void ChannelSubscriptionMessageEventHandler(TwitchSubscriptionMessagePayload payload);
+
+    /// <summary>
+    /// Emitted when a user gifts subs to your channel.
+    /// </summary>
+    /// <param name="payload"></param>
+    [Signal] public delegate void ChannelGiftedSubsEventHandler(TwitchSubscriptionGiftPayload payload);
+
+    /// <summary>
+    /// Emitted when a user cheers in your channel.
+    /// </summary>
+    /// <param name="payload"></param>
+    [Signal] public delegate void ChannelCheerEventHandler(TwitchCheerPayload payload);
 
     #region Individual Services
     public TwitchService_OAuth twitchServiceOAuth = new TwitchService_OAuth();
@@ -285,8 +284,8 @@ public partial class TwitchService : Node
 
         twitchServiceUsers.Init(this);
         twitchServiceOAuth.Init(this);
-        twitchServicePubSub.Init(this);
-        twitchServiceIRC.Init(this);
+        //twitchServicePubSub.Init(this);
+        //twitchServiceIRC.Init(this);
         twitchServiceEventSub.Init(this);
         twitchServiceEmotes.Init(this);
     }
@@ -302,13 +301,13 @@ public partial class TwitchService : Node
         UpdateUserID(delta);
 
         // Update PubSub
-        twitchServicePubSub.ClientPubSubUpdate(delta);
+        //twitchServicePubSub.ClientPubSubUpdate(delta);
 
         // Update IRC
-        twitchServiceIRC.ClientIRCUpdate(delta);
+        //twitchServiceIRC.ClientIRCUpdate(delta);
 
         // Update EventSub
-         twitchServiceEventSub.ClientEventSubUpdate(delta);
+        twitchServiceEventSub.ClientEventSubUpdate(delta);
 
         // Poll oauth
         twitchServiceOAuth.PollOAuthServer();

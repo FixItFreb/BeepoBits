@@ -29,12 +29,25 @@ public partial class VMCController : Node
 
     public void SetCurrentAvatar(BeepoAvatarVRM _currentAvatar)
     {
-        currentAvatar = _currentAvatar;
-        avatarAnimList = currentAvatar.AnimPlayer.GetAnimationList();
+        if (_currentAvatar != null)
+        {
+            currentAvatar = _currentAvatar;
+            avatarAnimList = currentAvatar.AnimPlayer.GetAnimationList();
+        }
+        else
+        {
+            currentAvatar = null;
+            avatarAnimList = null;
+        }
     }
 
     public void ReceiveOSCMessage(MessageObject message)
     {
+        if(currentAvatar == null)
+        {
+            return;
+        }
+        
         uint addressHash = message.data.address.Hash();
         object[] values = message.data.values;
 

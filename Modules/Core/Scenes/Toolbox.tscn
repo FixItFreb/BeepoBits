@@ -1,12 +1,34 @@
-[gd_scene format=3 uid="uid://b0psdmmkau57r"]
+[gd_scene load_steps=2 format=3 uid="uid://b0psdmmkau57r"]
 
-[node name="Toolbox" type="Window"]
+[ext_resource type="Script" path="res://Modules/Core/Toolbox/Toolbox.cs" id="1_3wama"]
+
+[node name="Toolbox" type="Window" node_paths=PackedStringArray("debugTextWindow")]
 title = "Toolbox"
 initial_position = 4
 size = Vector2i(250, 500)
 always_on_top = true
+script = ExtResource("1_3wama")
+debugTextWindow = NodePath("TabContainer/Debug Log/DebugWindow")
 
-[node name="Label" type="Label" parent="."]
-offset_right = 40.0
-offset_bottom = 23.0
-text = "Toolbox"
+[node name="TabContainer" type="TabContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Debug Log" type="PanelContainer" parent="TabContainer"]
+layout_mode = 2
+
+[node name="DebugWindow" type="TextEdit" parent="TabContainer/Debug Log"]
+layout_mode = 2
+theme_override_colors/font_readonly_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 10
+text = "Welcome to Super BeepoBox
+
+"
+editable = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
+wrap_mode = 1

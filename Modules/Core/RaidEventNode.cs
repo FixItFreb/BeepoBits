@@ -1,33 +1,22 @@
 using Godot;
 using System;
 
-public class RaidEventPayload
-{
-    public string raiderUsername;
-    public string raiderDisplayname;
-    public string raidersCount;
-
-    public RaidEventPayload(string _raiderUsername, string _raiderDisplayname, string _raidersCount)
-    {
-        raiderUsername = _raiderUsername;
-        raiderDisplayname = _raiderDisplayname;
-        raidersCount = _raidersCount;
-    }
-}
-
 public partial class RaidEventNode : Node
 {
+    [Signal] public delegate void OnRaidTriggerEventHandler(TwitchRaidPayload payload);
+
     public override void _Ready()
     {
-        BeepoCore.Instance.RegisterRaidEvent(this);
+        TwitchService.Instance.ChannelRaid += ExecuteRaidEvent;
     }
 
     public override void _ExitTree()
     {
-        BeepoCore.Instance.UnregisterRaidEvent(this);
+        TwitchService.Instance.ChannelRaid -= ExecuteRaidEvent;
     }
 
-    public virtual void ExecuteRaidEvent(RaidEventPayload payload)
+    public virtual void ExecuteRaidEvent(TwitchRaidPayload payload)
     {
+        EmitSignal(RaidEventNode.SignalName.OnRaidTrigger, payload);
     }
 }

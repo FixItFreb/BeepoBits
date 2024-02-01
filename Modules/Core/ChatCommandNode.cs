@@ -1,40 +1,74 @@
 using Godot;
 using System;
 
-public class ChatCommandPayload
-{
-    public string username;
-    public string displayname;
-    public string message;
-    public int bits;
-    public int badges;
-
-    public ChatCommandPayload(string _username, string _displayname, string _message, int _bits, int _badges)
-    {
-        username = _username;
-        displayname = _displayname;
-        message = _message;
-        bits = _bits;
-        badges = _badges;
-    }
-}
-
+[GlobalClass]
 public partial class ChatCommandNode : Node
 {
-    [Export] public string commandName;
+    protected string commandName;
+    [Export] public string CommandName
+    {
+        get { return commandName; }
+        set
+        {
+            if(commandName != value)
+            {
+                commandName = value;
+                commandNameHash = commandName.Hash();
+            }
+        }
+    }
+
+    public uint commandNameHash { get; private set; }
+
     [Export] public TwitchBadge requiredBadges;
+
+    protected string[] commandParams = new string[0];
+
+    [Signal] public delegate void OnCommandTriggerEventHandler(TwitchChatMessagePayload payload);
+
+    public override void _EnterTree()
+    {
+        if (!commandName.IsNullOrEmpty())
+        {
+            commandNameHash = commandName.Hash();
+        }
+    }
 
     public override void _Ready()
     {
-        BeepoCore.Instance.RegisterChatCommand(this);
+        TwitchService.Instance.ChannelChatMessage += ExecuteCommand;
     }
 
     public override void _ExitTree()
     {
-        BeepoCore.Instance.UnregisterChatCommand(this);
+        TwitchService.Instance.ChannelChatMessage -= ExecuteCommand;
     }
 
-    public virtual void ExecuteCommand(ChatCommandPayload payload)
+    public virtual void ExecuteCommand(TwitchChatMessagePayload payload)
     {
+        if (CheckCommand(payload.data.message.text))
+        {
+            EmitSignal(ChatCommandNode.SignalName.OnCommandTrigger, payload);
+        }
+    }
+
+    protected bool CheckCommand(string commandString)
+    {
+        // Is this prefixed with our command prefix and is there a command specified?
+        if(commandString.Length > 1 && commandString.StartsWith(BeepoCore.Instance.commandPrefix))
+        {
+            // Does this match the commandName we want?
+            commandString = commandString.TrimStart(BeepoCore.Instance.commandPrefix);
+            string[] commandSplit = commandString.Split(' ');
+            if(commandSplit[0].Hash() == commandNameHash)
+            {
+                if (commandString.Length > 0)
+                {
+                    commandParams = commandString.Split(' ');
+                }
+                return true;
+            }
+        }
+        return false;
     }
 }

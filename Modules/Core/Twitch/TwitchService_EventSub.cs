@@ -1,4 +1,5 @@
 using System;
+//using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
 
@@ -43,7 +44,7 @@ public partial class TwitchService_EventSub : RefCounted
 
         if (twitchService.debugPackets)
         {
-            GD.Print("Sub Fetch - " + parsedString);
+            BeepoCore.DebugLog("Sub Fetch - " + parsedString);
         }
 
         // If we get an authorization error, we need to re-do the oauth setup.
@@ -58,7 +59,7 @@ public partial class TwitchService_EventSub : RefCounted
     {
         if (twitchService.debugPackets)
         {
-            GD.Print("Making sub request: " + jsonData);
+            BeepoCore.DebugLog("Making sub request: " + jsonData);
         }
         
         twitchSubFetchHttpClient = new HttpRequest();
@@ -72,28 +73,13 @@ public partial class TwitchService_EventSub : RefCounted
             "Content-Type: application/json"
         };
 
-        string jsonString = Json.Stringify(jsonData);
-        Error err = twitchSubFetchHttpClient.Request(TwitchSubEndpoint, headerParams, HttpClient.Method.Post, jsonString);
+        Error err = twitchSubFetchHttpClient.Request(TwitchSubEndpoint, headerParams, HttpClient.Method.Post, Json.Stringify(jsonData));
     }
 
     private void ClientEventSubHandleConnectionEstablished(int peerID)
     {
         Dictionary channelUpdateRegistrationJson = new Dictionary();
-        // {
-        //     {"type", "channel.update"},
-        //     {"version", "2"},
-        //     {"condition", new Dictionary()
-        //         {
-        //             {"broadcaster_user_id", twitchService.TwitchUserID.ToString()}
-        //         }
-        //     }
-        //     {"transport", new Dictionary()
-        //         {
-        //             {"method", "websocket"},
-        //             {"seesion_id", eventSubSessionID}
-        //         }
-        //     }
-        // };
+
         channelUpdateRegistrationJson.Add("type", "channel.update");
         channelUpdateRegistrationJson.Add("version", "2");
         Dictionary conditionData = new Dictionary();
@@ -119,7 +105,7 @@ public partial class TwitchService_EventSub : RefCounted
         MakeSubRequest(followEventRegistrationJson);
 
         Dictionary subEventRegistrationJson = new Dictionary();
-        subEventRegistrationJson.Add("type", "channel.subscribe");
+        subEventRegistrationJson.Add("type", "channel.subscription.message");
         subEventRegistrationJson.Add("version", "1");
         conditionData = new Dictionary();
         conditionData.Add("broadcaster_user_id", twitchService.TwitchUserID.ToString());
@@ -143,10 +129,11 @@ public partial class TwitchService_EventSub : RefCounted
         MakeSubRequest(giftSubEventRegistrationJson);
 
         Dictionary resubEventRegistrationJson = new Dictionary();
-        resubEventRegistrationJson.Add("type", "channel.subscription.message");
+        resubEventRegistrationJson.Add("type", "channel.chat.message");
         resubEventRegistrationJson.Add("version", "1");
         conditionData = new Dictionary();
         conditionData.Add("broadcaster_user_id", twitchService.TwitchUserID.ToString());
+        conditionData.Add("user_id", twitchService.TwitchUserID.ToString());
         resubEventRegistrationJson.Add("condition", conditionData);
         transportData = new Dictionary();
         transportData.Add("method", "websocket");
@@ -165,6 +152,18 @@ public partial class TwitchService_EventSub : RefCounted
         transportData.Add("session_id", eventSubSessionID);
         cheerEventRegistrationJson.Add("transport", transportData);
         MakeSubRequest(cheerEventRegistrationJson);
+
+        Dictionary redeemEventRegistrationJson = new Dictionary();
+        redeemEventRegistrationJson.Add("type", "channel.channel_points_custom_reward_redemption.add");
+        redeemEventRegistrationJson.Add("version", "1");
+        conditionData = new Dictionary();
+        conditionData.Add("broadcaster_user_id", twitchService.TwitchUserID.ToString());
+        redeemEventRegistrationJson.Add("condition", conditionData);
+        transportData = new Dictionary();
+        transportData.Add("method", "websocket");
+        transportData.Add("session_id", eventSubSessionID);
+        redeemEventRegistrationJson.Add("transport", transportData);
+        MakeSubRequest(redeemEventRegistrationJson);
     }
 
     private void ClientEventSubHandleMessage(string type, Dictionary message)
@@ -172,23 +171,31 @@ public partial class TwitchService_EventSub : RefCounted
         switch(type)
         {
             case "channel.update":
-                GD.Print("channel update event - " + message["title"]);
+                BeepoCore.DebugLog("channel update event - " + message["title"]);
                 break;
             case "channel.follow":
-                GD.Print("channel follow event - " + message["user_name"]);
-                twitchService.EmitSignal(TwitchService.SignalName.ChannelUserFollowed, message["user_login"], message["user_name"]);
-                break;
-            case "channel.subscribe":
-                GD.Print("channel subscribe event - " + message["user_name"]);
-                break;
-            case "channel.subscription.gift":
-                GD.Print("channel subscribe gift event - " + message["user_name"] + " gifted " + message["total"]);
+                BeepoCore.DebugLog("channel follow event - " + message["user_name"]);
+                twitchService.EmitSignal(TwitchService.SignalName.ChannelUserFollowed, new TwitchFollowPayload(message));
                 break;
             case "channel.subscription.message":
-                GD.Print(message);
+                BeepoCore.DebugLog("channel subscribe message event - " + message["user_name"]);
+                twitchService.EmitSignal(TwitchService.SignalName.ChannelSubscriptionMessage, new TwitchSubscriptionMessagePayload(message));
+                break;
+            case "channel.subscription.gift":
+                BeepoCore.DebugLog("channel subscribe gift event - " + message["user_name"] + " gifted " + message["total"]);
+                twitchService.EmitSignal(TwitchService.SignalName.ChannelGiftedSubs, new TwitchSubscriptionGiftPayload(message));
+                break;
+            case "channel.chat.message":
+                BeepoCore.DebugLog("channel message event - " + message["chatter_user_name"] + " : " + message["message"].As<Dictionary>()["text"]);
+                twitchService.EmitSignal(TwitchService.SignalName.ChannelChatMessage, new TwitchChatMessagePayload(message));
                 break;
             case "channel.cheer":
-                GD.Print("channel cheer event - " + message["user_name"] + " cheered for " + message["bits"] + " bits");
+                BeepoCore.DebugLog("channel cheer event - " + message["user_name"] + " cheered for " + message["bits"] + " bits");
+                twitchService.EmitSignal(TwitchService.SignalName.ChannelCheer, new TwitchCheerPayload(message));
+                break;
+            case "channel.channel_points_custom_reward_redemption.add":
+                BeepoCore.DebugLog("channel redeem event - " + message["user_name"] + " redeemed " + message["reward"].As<Dictionary>()["title"]);
+                twitchService.EmitSignal(TwitchService.SignalName.ChannelPointsRedeem, new TwitchRedeemPayload(message));
                 break;
         }
     }
@@ -201,8 +208,7 @@ public partial class TwitchService_EventSub : RefCounted
 
     private void EventSubInjectPacket(string packetText)
     {
-        Dictionary resultDict = Json.ParseString(packetText).AsGodotDictionary();
-        //string resultIndented = Json.Stringify(resultDict, "    ");
+        Dictionary resultDict = Json.ParseString(packetText).As<Dictionary>();
         if(resultDict.ContainsKey("metadata"))
         {
             if(resultDict["metadata"].As<Dictionary>().ContainsKey("message_type"))
@@ -219,7 +225,7 @@ public partial class TwitchService_EventSub : RefCounted
                 {
                     ClientEventSubHandleMessage(
                         resultDict["payload"].As<Dictionary>()["subscription"].As<Dictionary>()["type"].As<string>(),
-                        Json.ParseString(resultDict["payload"].As<Dictionary>()["event"].As<string>()).AsGodotDictionary()
+                        resultDict["payload"].As<Dictionary>()["event"].As<Dictionary>()
                     );
                 }
             }
@@ -232,8 +238,6 @@ public partial class TwitchService_EventSub : RefCounted
         {
             throw new ApplicationException("Twitch Client ID not set");
         }
-
-        //GD.Print(clientEventSub.GetReadyState());
 
         // Attempt connection
         Error err = clientEventSub.ConnectToUrl(TwitchSubURL);
@@ -264,7 +268,7 @@ public partial class TwitchService_EventSub : RefCounted
         clientEventSub.Poll();
         // The following was causing errors for some reason:
         //ClientEventSubHandleConnectionEstablished(1);
-        clientEventSub.Poll();
+        //clientEventSub.Poll();
     }
 
     public void ClientEventSubUpdate(double delta)

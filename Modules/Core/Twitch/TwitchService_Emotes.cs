@@ -33,7 +33,7 @@ public partial class TwitchService_Emotes : RefCounted
 
         if (twitchService.debugPackets)
         {
-            GD.Print("Fetching Emotes: " + TwitchEmotesEndpoint + channelID);
+            BeepoCore.DebugLog("Fetching Emotes: " + TwitchEmotesEndpoint + channelID);
         }
 
         Error err = twitchEmotesFetchHttpClient.Request(TwitchEmotesEndpoint + channelID, headerParams, HttpClient.Method.Get);
@@ -44,7 +44,7 @@ public partial class TwitchService_Emotes : RefCounted
 
             if (twitchService.debugPackets)
             {
-                GD.Print("Emotes Fetch - " + parsedString);
+                BeepoCore.DebugLog("Emotes Fetch - " + parsedString);
             }
 
             Array<Dictionary> data = parsedResult["data"].As<Array<Dictionary>>();
@@ -55,7 +55,7 @@ public partial class TwitchService_Emotes : RefCounted
                 string emoteAddress = emote["images"].As<Dictionary>()["url_2x"].As<string>();
                 if (emoteID.Length == 0 || emoteID == emoteName)
                 {
-                    TwitchEmote.CacheEmote(emoteName, isAnimated, emoteAddress);
+                    //TwitchEmote.CacheEmote(emoteName, isAnimated, emoteAddress);
                 }
             }
 
