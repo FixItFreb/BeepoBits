@@ -36,32 +36,49 @@ public partial class BeepoCore : Node
     private void OnRedeemTriggered(TwitchRedeemPayload payload)
     {
         DebugLog(string.Format("Redeem: {0}, Displayname: {1}, Input: {2}", payload.data.reward.title, payload.data.user_name, payload.data.user_input));
+
+        if(channelRedeems.TryGetValue(payload.data.reward.title, out ChannelRedeemNode redeemNode))
+        {
+            redeemNode.ExecuteChannelRedeem(payload);
+        }
     }
 
     private void OnRaidTriggered(TwitchRaidPayload payload)
     {
         DebugLog(string.Format("RaiderUsername: {0}, RaiderDisplayName: {1}, RaidCount: {2}", payload.data.from_broadcaster_user_login, payload.data.from_broadcaster_user_name, payload.data.viewers));
+
+        foreach(RaidEventNode r in raidEvents)
+        {
+            r.ExecuteRaidEvent(payload);
+        }
     }
 
     private void OnMessageTriggered(TwitchChatMessagePayload payload)
     {
         DebugLog(string.Format("FromUsername: {0}, FromDisplayName: {1}, Message: {2}, Bits: {3}", payload.data.chatter_user_login, payload.data.chatter_user_name, payload.data.message.text, payload.data.cheer.bits));
 
-        // if(message[0] == commandPrefix)
-        // {
-        //     string[] splitMessage = message.Substring(1).Split(' ');
-        //     if (splitMessage.Length > 0)
-        //     {
-        //         string commandString = splitMessage[0];
-        //         if(chatCommands.TryGetValue(commandString, out ChatCommandNode chatCommand))
-        //         {
-        //             if ((int)chatCommand.requiredBadges == 0 || (badges & (int)chatCommand.requiredBadges) != 0)
-        //             {
-        //                 chatCommand.ExecuteCommand(new ChatCommandPayload(fromUsername, fromDisplayName, message, bits, badges));
-        //             }
-        //         }
-        //     }
-        // }
+        string messageText = payload.data.message.text;
+        if(messageText[0] == commandPrefix)
+        {
+            if (messageText.Length > 1)
+            {
+                string[] commandString = messageText.Substring(1).Split(' ');
+                if(chatCommands.TryGetValue(commandString[0], out ChatCommandNode chatCommand))
+                {
+                    string[] commandParams;
+                    if(commandString.Length > 1)
+                    {
+                        commandParams = new string[commandString.Length - 1];
+                        Array.Copy(commandString, 1, commandParams, 0, commandParams.Length);
+                    }
+                    else
+                    {
+                        commandParams = new string[0];
+                    }
+                    chatCommand.ExecuteCommand(payload, commandParams);
+                }
+            }
+        }
     }
 
     public void RegisterChatCommand(ChatCommandNode toAdd)

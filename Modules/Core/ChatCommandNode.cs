@@ -22,9 +22,9 @@ public partial class ChatCommandNode : Node
 
     [Export] public TwitchBadge requiredBadges;
 
-    protected string[] commandParams = new string[0];
+    //public string[] commandParams = new string[0];
 
-    [Signal] public delegate void OnCommandTriggerEventHandler(TwitchChatMessagePayload payload);
+    [Signal] public delegate void OnCommandTriggerEventHandler(TwitchChatMessagePayload payload, string[] commandParams);
 
     public override void _EnterTree()
     {
@@ -36,38 +36,29 @@ public partial class ChatCommandNode : Node
 
     public override void _Ready()
     {
-        TwitchService.Instance.ChannelChatMessage += ExecuteCommand;
+        //TwitchService.Instance.ChannelChatMessage += ExecuteCommand;
+        BeepoCore.Instance.RegisterChatCommand(this);
     }
 
     public override void _ExitTree()
     {
-        TwitchService.Instance.ChannelChatMessage -= ExecuteCommand;
+        //TwitchService.Instance.ChannelChatMessage -= ExecuteCommand;
+        BeepoCore.Instance.UnregisterChatCommand(this);
     }
 
-    public virtual void ExecuteCommand(TwitchChatMessagePayload payload)
+    public virtual void ExecuteCommand(TwitchChatMessagePayload payload, string[] commandParams)
     {
-        if (CheckCommand(payload.data.message.text))
+        if (CheckPermissions(payload))
         {
-            EmitSignal(ChatCommandNode.SignalName.OnCommandTrigger, payload);
+            EmitSignal(ChatCommandNode.SignalName.OnCommandTrigger, payload, commandParams);
         }
     }
 
-    protected bool CheckCommand(string commandString)
+    protected bool CheckPermissions(TwitchChatMessagePayload payload)
     {
-        // Is this prefixed with our command prefix and is there a command specified?
-        if(commandString.Length > 1 && commandString.StartsWith(BeepoCore.Instance.commandPrefix))
+        if(requiredBadges == TwitchBadge.None)
         {
-            // Does this match the commandName we want?
-            commandString = commandString.TrimStart(BeepoCore.Instance.commandPrefix);
-            string[] commandSplit = commandString.Split(' ');
-            if(commandSplit[0].Hash() == commandNameHash)
-            {
-                if (commandString.Length > 0)
-                {
-                    commandParams = commandString.Split(' ');
-                }
-                return true;
-            }
+            return true;
         }
         return false;
     }
