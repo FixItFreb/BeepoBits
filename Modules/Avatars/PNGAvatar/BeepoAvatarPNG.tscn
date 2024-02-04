@@ -1,17 +1,23 @@
-[gd_scene load_steps=7 format=3 uid="uid://bpc5c5r478dc3"]
+[gd_scene load_steps=11 format=3 uid="uid://bpc5c5r478dc3"]
 
 [ext_resource type="PackedScene" uid="uid://i33olrb0q1r3" path="res://Modules/Avatars/BeepoAvatar.tscn" id="1_ycvb2"]
 [ext_resource type="Script" path="res://Modules/Avatars/PNGAvatar/BeepoAvatarPNG.cs" id="2_apauq"]
 [ext_resource type="Script" path="res://Modules/Avatars/PNGAvatar/PNGBone.cs" id="3_ml7lu"]
-[ext_resource type="Texture2D" uid="uid://c5sv75uk780g4" path="res://beepo.png" id="4_2eund"]
+[ext_resource type="Texture2D" uid="uid://o3i6ux17yv7w" path="res://bepo_petno_wing.png" id="4_1vkmx"]
 [ext_resource type="Script" path="res://Modules/Avatars/PNGAvatar/PNGSpriteSegment.cs" id="4_kkqtg"]
+[ext_resource type="Texture2D" uid="uid://bfqmocvh53hct" path="res://bepo_pet_2.png" id="6_qpmq1"]
+[ext_resource type="Texture2D" uid="uid://boqu033n67qsp" path="res://Beepo_Wing.png" id="7_g1qdu"]
+[ext_resource type="Script" path="res://Modules/Avatars/PNGAvatar/WingMovement.cs" id="8_nm4pt"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_lcova"]
-size = Vector3(1, 7.43414, 1)
+[sub_resource type="BoxShape3D" id="BoxShape3D_2tck0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_iy3y2"]
+size = Vector3(8.41743, 8.95016, 0.22168)
 
 [node name="BeepoAvatar" instance=ExtResource("1_ycvb2")]
 
 [node name="BeepoAvatarPNG" type="RigidBody3D" parent="." index="1" node_paths=PackedStringArray("avatar")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.11053, 0)
 freeze = true
 freeze_mode = 1
 max_contacts_reported = 256
@@ -19,14 +25,46 @@ contact_monitor = true
 script = ExtResource("2_apauq")
 avatar = NodePath("..")
 
-[node name="PNGBone" type="Node3D" parent="BeepoAvatarPNG" index="0"]
+[node name="SampleWingMovement" type="Node3D" parent="BeepoAvatarPNG" index="0" node_paths=PackedStringArray("frontWing", "backWing")]
+script = ExtResource("8_nm4pt")
+frontWing = NodePath("../MainBody/FrontWing")
+backWing = NodePath("../MainBody/BackWing")
+
+[node name="MainBody" type="Node3D" parent="BeepoAvatarPNG" index="1"]
 script = ExtResource("3_ml7lu")
 
-[node name="PNGSpriteSegment" type="Sprite3D" parent="BeepoAvatarPNG/PNGBone" index="0"]
-texture = ExtResource("4_2eund")
+[node name="BeepoSilent" type="Sprite3D" parent="BeepoAvatarPNG/MainBody" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.113884, 0, 0)
+texture = ExtResource("4_1vkmx")
 script = ExtResource("4_kkqtg")
 speech = 1
-costume = PackedInt32Array(0, 1)
+collisionShape = SubResource("BoxShape3D_2tck0")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="BeepoAvatarPNG" index="1"]
-shape = SubResource("BoxShape3D_lcova")
+[node name="BeepoSpeaking" type="Sprite3D" parent="BeepoAvatarPNG/MainBody" index="1"]
+texture = ExtResource("6_qpmq1")
+script = ExtResource("4_kkqtg")
+speech = 2
+
+[node name="FrontWing" type="Node3D" parent="BeepoAvatarPNG/MainBody" index="2"]
+transform = Transform3D(0.994346, 0.106195, 0, -0.106195, 0.994346, 0, 0, 0, 1, -0.122537, 0.638984, 0)
+script = ExtResource("3_ml7lu")
+
+[node name="Wing" type="Sprite3D" parent="BeepoAvatarPNG/MainBody/FrontWing" index="0"]
+transform = Transform3D(0.930328, -0.366729, 0, 0.366729, 0.930328, 0, 0, 0, 1, 1.60173, 1.70129, 0.0831289)
+render_priority = 1
+texture = ExtResource("7_g1qdu")
+script = ExtResource("4_kkqtg")
+
+[node name="BackWing" type="Node3D" parent="BeepoAvatarPNG/MainBody" index="3"]
+transform = Transform3D(0.857527, -0.514439, 0, 0.514439, 0.857527, 0, 0, 0, 1, -0.0789647, 0.718519, 0)
+script = ExtResource("3_ml7lu")
+
+[node name="Wing" type="Sprite3D" parent="BeepoAvatarPNG/MainBody/BackWing" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.09692, 0.997584, 0)
+render_priority = -1
+texture = ExtResource("7_g1qdu")
+script = ExtResource("4_kkqtg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BeepoAvatarPNG" index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.439437, 0)
+shape = SubResource("BoxShape3D_iy3y2")

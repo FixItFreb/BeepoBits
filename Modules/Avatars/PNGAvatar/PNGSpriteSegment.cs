@@ -14,7 +14,7 @@ public partial class PNGSpriteSegment : Sprite3D
 {
 	// Sprite display control
 	[Export] private SpeechState speech;
-	[Export] private int[] costume = { 0 };
+	[Export] private Shape3D collisionShape;
 
 	public void SetSpeech(SpeechState newSpeech)
 	{

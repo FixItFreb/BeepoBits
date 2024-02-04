@@ -25,7 +25,8 @@ BeepoCore="*res://Modules/Core/BeepoCore.tscn"
 
 [display]
 
-window/size/always_on_top=true
+window/size/transparent=true
+window/per_pixel_transparency/allowed=true
 
 [dotnet]
 
@@ -47,3 +48,8 @@ debug_action={
 
 3d_render/layer_20="Editor Only"
 3d_physics/layer_1="Avatar"
+
+[rendering]
+
+environment/defaults/default_clear_color=Color(0.301961, 0.301961, 0.301961, 0)
+viewport/transparent_background=true
