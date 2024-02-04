@@ -18,7 +18,7 @@ public partial class BeepoAvatarPNG : RigidBody3D
     [Export] private double magnitudeX = 1;
     [Export] private double frequencyY = 0;
     [Export] private double magnitudeY = 1;
-    [Export] private double jumpMagnitude = 2.5;
+    [Export] private double jumpMagnitude = 1.5;
 
     // Movement state
     private Vector3 originalPosition = Vector3.Zero;
@@ -28,7 +28,7 @@ public partial class BeepoAvatarPNG : RigidBody3D
     // PID stuff
     private float proportionalGain = 20.0f;
     private float integralGain = 0.01f;
-    private float derivativeGain = 8.0f;
+    private float derivativeGain = 10.0f;
     private Vector3 lastError = Vector3.Zero;
     private Vector3 integrationStored = Vector3.Zero;
     private float integrationClamp = 10.0f;

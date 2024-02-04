@@ -1,40 +1,65 @@
 using Godot;
 using System;
 
-public class ChatCommandPayload
-{
-    public string username;
-    public string displayname;
-    public string message;
-    public int bits;
-    public int badges;
-
-    public ChatCommandPayload(string _username, string _displayname, string _message, int _bits, int _badges)
-    {
-        username = _username;
-        displayname = _displayname;
-        message = _message;
-        bits = _bits;
-        badges = _badges;
-    }
-}
-
+[GlobalClass]
 public partial class ChatCommandNode : Node
 {
-    [Export] public string commandName;
+    protected string commandName;
+    [Export] public string CommandName
+    {
+        get { return commandName; }
+        set
+        {
+            if(commandName != value)
+            {
+                commandName = value;
+                commandNameHash = commandName.Hash();
+            }
+        }
+    }
+
+    public uint commandNameHash { get; private set; }
+
     [Export] public TwitchBadge requiredBadges;
+
+    //public string[] commandParams = new string[0];
+
+    [Signal] public delegate void OnCommandTriggerEventHandler(TwitchChatMessagePayload payload, string[] commandParams);
+
+    public override void _EnterTree()
+    {
+        if (!commandName.IsNullOrEmpty())
+        {
+            commandNameHash = commandName.Hash();
+        }
+    }
 
     public override void _Ready()
     {
+        //TwitchService.Instance.ChannelChatMessage += ExecuteCommand;
         BeepoCore.Instance.RegisterChatCommand(this);
     }
 
     public override void _ExitTree()
     {
+        //TwitchService.Instance.ChannelChatMessage -= ExecuteCommand;
         BeepoCore.Instance.UnregisterChatCommand(this);
     }
 
-    public virtual void ExecuteCommand(ChatCommandPayload payload)
+    public virtual void ExecuteCommand(TwitchChatMessagePayload payload, string[] commandParams)
     {
+        if (CheckPermissions(payload))
+        {
+            EmitSignal(ChatCommandNode.SignalName.OnCommandTrigger, payload, commandParams);
+        }
+    }
+
+    protected bool CheckPermissions(TwitchChatMessagePayload payload)
+    {
+        if(requiredBadges == TwitchBadge.None)
+        {
+            return true;
+        }
+        return false;
     }
 }

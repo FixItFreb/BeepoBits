@@ -203,7 +203,7 @@ public partial class TwitchService_OAuth : RefCounted
             "bits:read",
             "channel:read:subscriptions",
             "moderator:read:followers",
-            "bits:read"
+            "user:read:chat",
         };
 
         string scopeStr = String.Join(" ", scopeArray);

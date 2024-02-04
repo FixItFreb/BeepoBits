@@ -30,3 +30,6 @@
 [0821/002413.187:ERROR:check.cc(222)] Check failed: false. 
 [0821/004601.538:ERROR:check.cc(222)] Check failed: false. 
 [0822/031437.735:ERROR:check.cc(222)] Check failed: false. 
+[1016/234941.282:ERROR:check.cc(298)] Check failed: false. NOTREACHED log messages are omitted in official builds. Sorry!
+[0109/041613.569:ERROR:check.cc(297)] Check failed: false. NOTREACHED log messages are omitted in official builds. Sorry!
+[0114/003215.437:ERROR:check.cc(297)] Check failed: false. NOTREACHED log messages are omitted in official builds. Sorry!

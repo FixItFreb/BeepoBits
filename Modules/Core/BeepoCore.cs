@@ -8,15 +8,18 @@ public partial class BeepoCore : Node
     private static BeepoCore _instance;
     public static BeepoCore Instance { get { return _instance; } }
 
-    [Export] private char commandPrefix = '!';
+    [Export] public char commandPrefix = '!';
     [Export] private TwitchService twitchService;
-    [Export] private TextEdit debugTextWindow;
 
     private GDC.Dictionary<string, ChatCommandNode> chatCommands = new GDC.Dictionary<string, ChatCommandNode>();
     private GDC.Dictionary<string, ChannelRedeemNode> channelRedeems = new GDC.Dictionary<string, ChannelRedeemNode>();
     private List<RaidEventNode> raidEvents = new List<RaidEventNode>();
 
     public static List<BeepoAvatar> currentAvatars = new List<BeepoAvatar>();
+
+    [Signal] public delegate void NewAvatarRegisteredEventHandler(BeepoAvatar newAvatar);
+    [Signal] public delegate void AvatarUnregisteredEventHandler(BeepoAvatar avatar);
+    [Signal] public delegate void OnDebugLogEventHandler(string debugString);
 
     public override void _EnterTree()
     {
@@ -30,51 +33,49 @@ public partial class BeepoCore : Node
         twitchService.ChannelRaid += OnRaidTriggered;
     }
 
-    private void OnRedeemTriggered(string title, string username, string displayname, string userInput)
+    private void OnRedeemTriggered(TwitchRedeemPayload payload)
     {
-        string debugString = string.Format("{4} : Redeem: {0}, Username: {1}, Displayname: {2}, Input: {3}", title, username, displayname, userInput, Time.GetTimeStringFromSystem());
-        GD.Print(debugString);
-        debugTextWindow.Text += string.Format("{0}\n", debugString);
-        debugTextWindow.ScrollVertical = Int32.MaxValue;
+        DebugLog(string.Format("Redeem: {0}, Displayname: {1}, Input: {2}", payload.data.reward.title, payload.data.user_name, payload.data.user_input));
 
-        if(channelRedeems.TryGetValue(title, out ChannelRedeemNode redeem))
+        if(channelRedeems.TryGetValue(payload.data.reward.title, out ChannelRedeemNode redeemNode))
         {
-            redeem.ExecuteChannelRedeem(new ChannelRedeemPayload(title, username, displayname, userInput));
+            redeemNode.ExecuteChannelRedeem(payload);
         }
     }
 
-    private void OnRaidTriggered(string raiderUsername, string raiderDisplayName, string raiderUserCount)
+    private void OnRaidTriggered(TwitchRaidPayload payload)
     {
-        string debugString = string.Format("{3} : RaiderUsername: {0}, RaiderDisplayName: {1}, RaidCount: {2}", raiderUsername, raiderDisplayName, raiderUserCount, Time.GetTimeStringFromSystem());
-        GD.Print(debugString);
-        debugTextWindow.Text += string.Format("{0}\n", debugString);
-        debugTextWindow.ScrollVertical = Int32.MaxValue;
+        DebugLog(string.Format("RaiderUsername: {0}, RaiderDisplayName: {1}, RaidCount: {2}", payload.data.from_broadcaster_user_login, payload.data.from_broadcaster_user_name, payload.data.viewers));
 
         foreach(RaidEventNode r in raidEvents)
         {
-            r.ExecuteRaidEvent(new RaidEventPayload(raiderUsername, raiderDisplayName, raiderUserCount));
+            r.ExecuteRaidEvent(payload);
         }
     }
 
-    private void OnMessageTriggered(string fromUsername, string fromDisplayName, string message, int bits, int badges)
+    private void OnMessageTriggered(TwitchChatMessagePayload payload)
     {
-        string debugString = string.Format("{4} : FromUsername: {0}, FromDisplayName: {1}, Message: {2}, Bits: {3}", fromUsername, fromDisplayName, message, bits, Time.GetTimeStringFromSystem());
-        GD.Print(debugString);
-        debugTextWindow.Text += string.Format("{0}\n", debugString);
-        debugTextWindow.ScrollVertical = Int32.MaxValue;
+        DebugLog(string.Format("FromUsername: {0}, FromDisplayName: {1}, Message: {2}, Bits: {3}", payload.data.chatter_user_login, payload.data.chatter_user_name, payload.data.message.text, payload.data.cheer.bits));
 
-        if(message[0] == commandPrefix)
+        string messageText = payload.data.message.text;
+        if(messageText[0] == commandPrefix)
         {
-            string[] splitMessage = message.Substring(1).Split(' ');
-            if (splitMessage.Length > 0)
+            if (messageText.Length > 1)
             {
-                string commandString = splitMessage[0];
-                if(chatCommands.TryGetValue(commandString, out ChatCommandNode chatCommand))
+                string[] commandString = messageText.Substring(1).Split(' ');
+                if(chatCommands.TryGetValue(commandString[0], out ChatCommandNode chatCommand))
                 {
-                    if ((int)chatCommand.requiredBadges == 0 || (badges & (int)chatCommand.requiredBadges) != 0)
+                    string[] commandParams;
+                    if(commandString.Length > 1)
                     {
-                        chatCommand.ExecuteCommand(new ChatCommandPayload(fromUsername, fromDisplayName, message, bits, badges));
+                        commandParams = new string[commandString.Length - 1];
+                        Array.Copy(commandString, 1, commandParams, 0, commandParams.Length);
                     }
+                    else
+                    {
+                        commandParams = new string[0];
+                    }
+                    chatCommand.ExecuteCommand(payload, commandParams);
                 }
             }
         }
@@ -82,15 +83,15 @@ public partial class BeepoCore : Node
 
     public void RegisterChatCommand(ChatCommandNode toAdd)
     {
-        if (!chatCommands.ContainsKey(toAdd.commandName))
+        if (!chatCommands.ContainsKey(toAdd.CommandName))
         {
-            chatCommands.Add(toAdd.commandName, toAdd);
+            chatCommands.Add(toAdd.CommandName, toAdd);
         }
     }
 
     public void UnregisterChatCommand(ChatCommandNode toRemove)
     {
-        chatCommands.Remove(toRemove.commandName);
+        chatCommands.Remove(toRemove.CommandName);
     }
 
     public void RegisterRaidEvent(RaidEventNode toAdd)
@@ -105,15 +106,15 @@ public partial class BeepoCore : Node
 
     public void RegisterChannelRedeem(ChannelRedeemNode toAdd)
     {
-        if(!channelRedeems.ContainsKey(toAdd.redeemTitle))
+        if(!channelRedeems.ContainsKey(toAdd.RedeemTitle))
         {
-            channelRedeems.Add(toAdd.redeemTitle, toAdd);
+            channelRedeems.Add(toAdd.RedeemTitle, toAdd);
         }
     }
 
     public void UnregisterChannelRedeem(ChannelRedeemNode toRemove)
     {
-        channelRedeems.Remove(toRemove.redeemTitle);
+        channelRedeems.Remove(toRemove.RedeemTitle);
     }
 
     public bool HasBadge(int badges, TwitchBadge badge)
@@ -121,8 +122,34 @@ public partial class BeepoCore : Node
         return (badges & (int)badge) != 0;
     }
 
-    public void SendTwitchMessage(string newMessage)
+    public static void SendTwitchMessage(string newMessage)
     {
-        twitchService.twitchServiceIRC.ClientIRCSend("PRIVMSG #" + twitchService.twitchUsername + " :" + newMessage);
+        _instance.twitchService.twitchServiceIRC.ClientIRCSend("PRIVMSG #" + _instance.twitchService.twitchUsername + " :" + newMessage);
+    }
+
+    public static void RegisterNewAvatar(BeepoAvatar newAvatar)
+    {
+        if(currentAvatars.Contains(newAvatar))
+        {
+            return;
+        }
+
+        currentAvatars.Add(newAvatar);
+        _instance.EmitSignal(BeepoCore.SignalName.NewAvatarRegistered, newAvatar);
+    }
+
+    public static void UnregisterAvatar(BeepoAvatar avatar)
+    {
+        if (currentAvatars.Contains(avatar))
+        {
+            currentAvatars.Remove(avatar);
+            _instance.EmitSignal(BeepoCore.SignalName.AvatarUnregistered, avatar);
+        }
+    }
+
+    public static void DebugLog(string debugText)
+    {
+        GD.Print(Time.GetTimeStringFromSystem() + " : " + debugText);
+        _instance.EmitSignal(BeepoCore.SignalName.OnDebugLog, Time.GetTimeStringFromSystem() + " : " + debugText);
     }
 }

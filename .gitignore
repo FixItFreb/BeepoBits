@@ -17,5 +17,5 @@ export_presets.cfg
 data_*/
 mono_crash.*.json
 
-# Beepo specific igno
+# Beepo specific ignore
 Local_*/

@@ -12,7 +12,7 @@ config_version=5
 
 config/name="BeepoBits"
 run/main_scene="res://Main.tscn"
-config/features=PackedStringArray("4.1", "C#", "Forward Plus")
+config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://beepo.png"
 
 [audio]
@@ -27,6 +27,7 @@ BeepoCore="*res://Modules/Core/BeepoCore.tscn"
 
 window/size/transparent=true
 window/per_pixel_transparency/allowed=true
+window/subwindows/embed_subwindows=false
 
 [dotnet]
 
@@ -34,7 +35,7 @@ project/assembly_name="OpenBeepoBox"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gif-importer/plugin.cfg")
+enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/gif-importer/plugin.cfg", "res://addons/vrm/plugin.cfg")
 
 [input]
 
@@ -53,3 +54,4 @@ debug_action={
 
 environment/defaults/default_clear_color=Color(0.301961, 0.301961, 0.301961, 0)
 viewport/transparent_background=true
+limits/opengl/max_lights_per_object=16

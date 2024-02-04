@@ -4,9 +4,9 @@ using System;
 public partial class ThrowRedeem : ChannelRedeemNode
 {
     [Export] public int throwCount = 1;
-    public override void ExecuteChannelRedeem(ChannelRedeemPayload payload)
+    public override void ExecuteChannelRedeem(TwitchRedeemPayload payload)
     {
-        if(payload.title == redeemTitle)
+        if (payload.data.reward.title.Hash() == titleHash)
         {
             ThrowingManager.Instance.Throw(throwCount);
         }

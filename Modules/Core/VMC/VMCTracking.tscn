@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://cu0dt74hm2wuw"]
+
+[ext_resource type="Script" path="res://Modules/Core/VMC/VMCTracking.cs" id="1_m626w"]
+[ext_resource type="Script" path="res://Modules/Core/VMC/VMCController.cs" id="2_goete"]
+[ext_resource type="Script" path="res://Modules/Core/OSC/uOSC/uOscServer.cs" id="3_yxp07"]
+
+[node name="VMCTracking" type="Node" node_paths=PackedStringArray("oscServer", "vmcController")]
+script = ExtResource("1_m626w")
+oscServer = NodePath("Server")
+vmcController = NodePath("Controller")
+
+[node name="Controller" type="Node" parent="."]
+script = ExtResource("2_goete")
+
+[node name="Server" type="Node" parent="."]
+script = ExtResource("3_yxp07")
+port = 39539
+autoStart = false

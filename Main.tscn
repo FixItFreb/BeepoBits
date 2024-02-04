@@ -70,15 +70,19 @@ frequencyY = 0.21
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.14889, 7.24209)
 cull_mask = 524287
 
-[node name="MicAudioStream" type="AudioStreamPlayer" parent="."]
+[node name="MicAudioStream" type="AudioStreamPlayer" parent="." node_paths=PackedStringArray("micOffTimer")]
 stream = SubResource("AudioStreamMicrophone_cyfpr")
 autoplay = true
 mix_target = 2
 bus = &"Mic"
 script = ExtResource("7_6f56n")
+micOffTimer = NodePath("MicOffDelay")
 captureInput = true
+
+[node name="MicOffDelay" type="Timer" parent="MicAudioStream"]
 
 [connection signal="MicClose" from="MicAudioStream" to="AvatarAnchor/BeepoAvatar/BeepoAvatarPNG" method="StopSpeaking"]
 [connection signal="MicOpen" from="MicAudioStream" to="AvatarAnchor/BeepoAvatar/BeepoAvatarPNG" method="StartSpeaking"]
+[connection signal="timeout" from="MicAudioStream/MicOffDelay" to="MicAudioStream" method="StopMic"]
 
 [editable path="AvatarAnchor/BeepoAvatar"]

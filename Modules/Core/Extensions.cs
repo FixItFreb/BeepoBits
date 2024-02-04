@@ -23,9 +23,9 @@ public static class RayCast3DExt
             return false;
         }
         
-        if(collider is T)
+        if(collider is T tCollider)
         {
-            colliderObject = collider as T;
+            colliderObject = tCollider;
             return true;
         }
         else
@@ -33,6 +33,46 @@ public static class RayCast3DExt
             colliderObject = default(T);
             return false;
         }
+    }
+}
+
+public static class Vector2Ext
+{
+    /// <summary>
+    /// Returns a new Vector2 with the minimum X and Y values from v1 and v2
+    /// </summary>
+    /// <param name="v1"></param>
+    /// <param name="v2"></param>
+    /// <returns></returns>
+    public static Vector2 Min(this Vector2 v1, Vector2 v2)
+    {
+        return new Vector2(Mathf.Min(v1.X, v2.X), Mathf.Min(v1.Y, v2.Y));
+    }
+
+    /// <summary>
+    /// Returns a new Vector2 with the maximum X and Y values from v1 and v2
+    /// </summary>
+    /// <param name="v1"></param>
+    /// <param name="v2"></param>
+    /// <returns></returns>
+    public static Vector2 Max(this Vector2 v1, Vector2 v2)
+    {
+        return new Vector2(Mathf.Max(v1.X, v2.X), Mathf.Max(v1.Y, v2.Y));
+    }
+
+    public static Vector2 WithX(this Vector2 v1, float newX)
+    {
+        return new Vector2(newX, v1.Y);
+    }
+
+    public static Vector2 WithY(this Vector2 v1, float newY)
+    {
+        return new Vector2(v1.X, newY);
+    }
+
+    public static Vector2I ToVector2I(this Vector2 v1)
+    {
+        return new Vector2I((int)v1.X, (int)v1.Y);
     }
 }
 
@@ -57,6 +97,8 @@ public static class Vector3Ext
 
 public static class IEnumerableExt
 {
+    public delegate TResult TCondition<out TResult>(GodotObject input);
+
     /// <summary>
     /// Get element at index. Clamps index to between 0 and count - 1
     /// </summary>
@@ -66,6 +108,10 @@ public static class IEnumerableExt
     /// <returns></returns>
     public static T GetIndexSafe<T>(this IEnumerable<T> source, int index)
     {
+        if(source == null || source.Count() == 0)
+        {
+            return default(T);
+        }
         index = Mathf.Clamp(index, 0, source.Count() - 1);
         return source.ElementAt(index);
     }
@@ -90,6 +136,45 @@ public static class IEnumerableExt
     public static bool IsNullOrEmpty<T>(this IEnumerable<T> source)
     {
         return source == null || source.Count() == 0;
+    }
+
+
+    /// <summary>
+    /// Returns true if source IEnumerable contains all entries contained in toCheck
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source"></param>
+    /// <param name="toCheck"></param>
+    /// <returns></returns>
+    public static bool ContainsAll<T>(this IEnumerable<T> source, IEnumerable<T> toCheck)
+    {
+        foreach(T t in toCheck)
+        {
+            if(!source.Contains(t))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Returns true is source IEnumerable contains any entries contained in toCheck
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source"></param>
+    /// <param name="toCheck"></param>
+    /// <returns></returns>
+    public static bool ContainsAny<T>(this IEnumerable<T> source, IEnumerable<T> toCheck)
+    {
+        foreach(T t in toCheck)
+        {
+            if(source.Contains(t))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
@@ -126,9 +211,9 @@ public static class Area3DExt
         Array<Area3D> areas = area3D.GetOverlappingAreas();
         foreach(Area3D a in areas)
         {
-            if(a is T)
+            if(a is T t)
             {
-                areasOfType.Add(a as T);
+                areasOfType.Add(t);
             }
         }
         return areasOfType;
@@ -149,13 +234,10 @@ public static class NodeExt
     /// <returns></returns>
     public static bool TryCastBase<T>(this Node node, out T cast) where T : class
     {
-        cast = null;
-        if (node is T)
-        {
-            cast = node as T;
-        }
+        cast = node is T tNode ? tNode : null;
         return cast != null;
     }
+
 
     /// <summary>
     /// Try to cast the node to the type T (where T inherits GodotObject).
@@ -167,11 +249,7 @@ public static class NodeExt
     /// <returns></returns>
     public static bool TryCast<[MustBeVariant] T>(this Node node, out T castNode) where T : GodotObject
     {
-        castNode = null;
-        if(node is T)
-        {
-            castNode = node as T;
-        }
+        castNode = node is T tNode ? tNode : null;
         return castNode != null;
     }
 

@@ -3,10 +3,9 @@
 [ext_resource type="Script" path="res://Modules/Core/BeepoCore.cs" id="1_ltca3"]
 [ext_resource type="Script" path="res://Modules/Core/Twitch/TwitchService.cs" id="2_1ujbl"]
 
-[node name="BeepoCore" type="Node" node_paths=PackedStringArray("twitchService", "debugTextWindow")]
+[node name="BeepoCore" type="Node" node_paths=PackedStringArray("twitchService")]
 script = ExtResource("1_ltca3")
 twitchService = NodePath("TwitchService")
-debugTextWindow = NodePath("DebugWindow")
 
 [node name="TwitchService" type="Node" parent="."]
 script = ExtResource("2_1ujbl")
@@ -14,6 +13,7 @@ twitchClientID = "65016wodmk6fldrrscoq0amo6pbkgv"
 debugPackets = false
 
 [node name="DebugWindow" type="TextEdit" parent="."]
+visible = false
 offset_left = 5.0
 offset_top = 5.0
 offset_right = 383.0

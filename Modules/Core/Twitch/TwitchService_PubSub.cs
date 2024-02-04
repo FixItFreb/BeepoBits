@@ -110,7 +110,7 @@ public partial class TwitchService_PubSub : RefCounted
         {
             if (twitchService.debugPackets)
             {
-                GD.Print("PubSub: " + packetText);
+                BeepoCore.DebugLog("PubSub: " + packetText);
             }
             string messageTopic = resultDict["data"].As<Dictionary>()["topic"].ToString();
             Dictionary messageData = Json.ParseString(resultDict["data"].As<Dictionary>()["message"].ToString()).As<Dictionary>();
