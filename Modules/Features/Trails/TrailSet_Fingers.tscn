@@ -1,0 +1,84 @@
+[gd_scene load_steps=12 format=3 uid="uid://blv3jufvsork1"]
+
+[ext_resource type="Script" path="res://Modules/Features/Trails/TrailSet.cs" id="1_jd3cj"]
+[ext_resource type="Resource" uid="uid://ue02nd1m56ol" path="res://Modules/Features/Trails/GradientSets/TrailGradientSet_Enby.tres" id="2_8160f"]
+[ext_resource type="Resource" uid="uid://b833rhjan630" path="res://Modules/Features/Trails/GradientSets/TrailGradientSet_Pride.tres" id="3_4i8y8"]
+[ext_resource type="Resource" uid="uid://dkyklhihr0n36" path="res://Modules/Features/Trails/GradientSets/TrailGradientSet_Trans.tres" id="4_d6vr8"]
+[ext_resource type="Material" uid="uid://c35d3t1f6acjb" path="res://Modules/Features/Trails/TrailMaterial.tres" id="5_2e44g"]
+[ext_resource type="Script" path="res://Modules/Features/Trails/TrailEffect.cs" id="6_yi53g"]
+
+[sub_resource type="Gradient" id="Gradient_rc73j"]
+offsets = PackedFloat32Array(0, 0.8, 1)
+colors = PackedColorArray(0.356863, 0.807843, 0.980392, 1, 0.356863, 0.807843, 0.980392, 1, 0.356863, 0.807843, 0.980392, 0)
+
+[sub_resource type="Gradient" id="Gradient_w30cv"]
+offsets = PackedFloat32Array(0, 0.8, 1)
+colors = PackedColorArray(0.960784, 0.662745, 0.721569, 1, 0.960784, 0.662745, 0.721569, 1, 0.960784, 0.662745, 0.721569, 0)
+
+[sub_resource type="Gradient" id="Gradient_kriki"]
+offsets = PackedFloat32Array(0, 0.8, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_ykbrk"]
+offsets = PackedFloat32Array(0, 0.8, 1)
+colors = PackedColorArray(0.960784, 0.662745, 0.721569, 1, 0.960784, 0.662745, 0.721569, 1, 0.960784, 0.662745, 0.721569, 0)
+
+[sub_resource type="Gradient" id="Gradient_43wxf"]
+offsets = PackedFloat32Array(0, 0.799213, 1)
+colors = PackedColorArray(0.356863, 0.807843, 0.980392, 1, 0.356863, 0.807843, 0.980392, 1, 0.356863, 0.807843, 0.980392, 0)
+
+[node name="TrailSet_Fingers" type="Node" node_paths=PackedStringArray("trails")]
+script = ExtResource("1_jd3cj")
+setName = &"Fingers"
+trails = [NodePath("TrailMesh_Thumb"), NodePath("TrailMesh_Index"), NodePath("TrailMesh_Middle"), NodePath("TrailMesh_Ring"), NodePath("TrailMesh_Little")]
+trailGradients = [ExtResource("2_8160f"), ExtResource("3_4i8y8"), ExtResource("4_d6vr8")]
+
+[node name="TrailMesh_Thumb" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0.816, 0.577, 1, 0, 0, 0, 0.577, -0.816, 0.683869, 1.51494, 0.0465953)
+material_override = ExtResource("5_2e44g")
+skeleton = NodePath("../..")
+script = ExtResource("6_yi53g")
+fromWidth = 0.01
+scaleTexture = false
+motionDelta = 0.01
+trailGradient = SubResource("Gradient_rc73j")
+
+[node name="TrailMesh_Index" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 1, 0, 0, 0, -1, -1, 0, 0, 0.749186, 1.53737, -0.0050484)
+material_override = ExtResource("5_2e44g")
+skeleton = NodePath("../..")
+script = ExtResource("6_yi53g")
+fromWidth = 0.01
+scaleTexture = false
+motionDelta = 0.01
+trailGradient = SubResource("Gradient_w30cv")
+
+[node name="TrailMesh_Middle" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 1, 0, 0, 0, -1, -1, 0, 0, 0.757205, 1.53804, -0.023345)
+material_override = ExtResource("5_2e44g")
+skeleton = NodePath("../..")
+script = ExtResource("6_yi53g")
+fromWidth = 0.01
+scaleTexture = false
+motionDelta = 0.01
+trailGradient = SubResource("Gradient_kriki")
+
+[node name="TrailMesh_Ring" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 1, 0, 0, 0, -1, -1, 0, 0, 0.749896, 1.53804, -0.0410312)
+material_override = ExtResource("5_2e44g")
+skeleton = NodePath("../..")
+script = ExtResource("6_yi53g")
+fromWidth = 0.01
+scaleTexture = false
+motionDelta = 0.01
+trailGradient = SubResource("Gradient_ykbrk")
+
+[node name="TrailMesh_Little" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, 0.816, 0.577, 1, 0, 0, 0, 0.577, -0.816, 0.739527, 1.53804, -0.0586637)
+material_override = ExtResource("5_2e44g")
+skeleton = NodePath("../..")
+script = ExtResource("6_yi53g")
+fromWidth = 0.01
+scaleTexture = false
+motionDelta = 0.01
+trailGradient = SubResource("Gradient_43wxf")

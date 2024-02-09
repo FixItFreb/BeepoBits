@@ -79,6 +79,17 @@ public static class Vector2Ext
 public static class Vector3Ext
 {
     /// <summary>
+    /// Return this Vector3 with a x value of newX.
+    /// </summary>
+    /// <param name="v"></param>
+    /// <param name="newX"></param>
+    /// <returns></returns>
+    public static Vector3 WithX(this Vector3 v, float newX)
+    {
+        return new Vector3(newX, v.Y, v.Z);
+    }
+
+    /// <summary>
     /// Return this Vector3 with a y value of newY.
     /// </summary>
     /// <param name="v"></param>
@@ -89,9 +100,25 @@ public static class Vector3Ext
         return new Vector3(v.X, newY, v.Z);
     }
 
+    /// <summary>
+    /// Return this Vector3 with a z value of newZ.
+    /// </summary>
+    /// <param name="v"></param>
+    /// <param name="newZ"></param>
+    /// <returns></returns>
+    public static Vector3 WithZ(this Vector3 v, float newZ)
+    {
+        return new Vector3(v.X, v.Y, newZ);
+    }
+
     public static Vector3 RandomPoint(this Vector3 v, double randX, double randY, double randZ)
     {
         return new Vector3(v.X + (float)GD.RandRange(randX * -1, randX), v.Y + (float)GD.RandRange(randY * -1, randY), v.Z + (float)GD.RandRange(randZ * -1, randZ));
+    }
+
+    public static Vector3 RandomPoint(this Vector3 v, Vector3 randV)
+    {
+        return new Vector3(v.X + (float)GD.RandRange(randV.X * -1, randV.X), v.Y + (float)GD.RandRange(randV.Y * -1, randV.Y), v.Z + (float)GD.RandRange(randV.Z * -1, randV.Z));
     }
 }
 
@@ -238,21 +265,6 @@ public static class NodeExt
         return cast != null;
     }
 
-
-    /// <summary>
-    /// Try to cast the node to the type T (where T inherits GodotObject).
-    /// If successful returns true and castNode param will be the casted type.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="node"></param>
-    /// <param name="castNode"></param>
-    /// <returns></returns>
-    public static bool TryCast<[MustBeVariant] T>(this Node node, out T castNode) where T : GodotObject
-    {
-        castNode = node is T tNode ? tNode : null;
-        return castNode != null;
-    }
-
     /// <summary>
     /// Adds a timer to this node that will execute the given onTimeout method when the timer ticks.
     /// </summary>
@@ -296,7 +308,6 @@ public static class NodeExt
         {
             if (conditional())
             {
-                //onTrue();
                 if(callDeferred)
                 {
                     onTrue.CallDeferred();
@@ -331,5 +342,31 @@ public static class Path3DExt
     public static void SetPointGlobalPosition(this Path3D path3D, int pointIndex, Vector3 newGlobalPosition)
     {
         path3D.Curve.SetPointPosition(pointIndex, path3D.GlobalPosition + newGlobalPosition);
+    }
+}
+
+public static class GodotObjectExt
+{
+    /// <summary>
+    /// Try to cast the godot object to the type T (where T inherits GodotObject).
+    /// If successful returns true and castObject param will be the casted type.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="godotObject"></param>
+    /// <param name="castObject"></param>
+    /// <returns></returns>
+    public static bool TryCast<T>(this GodotObject godotObject, out T castObject) where T : GodotObject
+    {
+        castObject = godotObject is T tObject ? tObject : null;
+        return castObject != null;
+    }
+}
+
+public static class AudioStreamPlayerExt
+{
+    public static void PlayAudio(this AudioStreamPlayer audioPlayer, AudioStream toPlay)
+    {
+        audioPlayer.Stream = toPlay;
+        audioPlayer.Play();
     }
 }

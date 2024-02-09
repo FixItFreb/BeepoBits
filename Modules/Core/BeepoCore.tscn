@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://ct8qu0j3b5uoa"]
+[gd_scene load_steps=4 format=3 uid="uid://ct8qu0j3b5uoa"]
 
 [ext_resource type="Script" path="res://Modules/Core/BeepoCore.cs" id="1_ltca3"]
 [ext_resource type="Script" path="res://Modules/Core/Twitch/TwitchService.cs" id="2_1ujbl"]
+[ext_resource type="Script" path="res://Modules/Core/BeepoAudio.cs" id="3_47s4i"]
 
 [node name="BeepoCore" type="Node" node_paths=PackedStringArray("twitchService")]
 script = ExtResource("1_ltca3")
@@ -11,6 +12,12 @@ twitchService = NodePath("TwitchService")
 script = ExtResource("2_1ujbl")
 twitchClientID = "65016wodmk6fldrrscoq0amo6pbkgv"
 debugPackets = false
+
+[node name="BeepoAudio" type="Node" parent="." node_paths=PackedStringArray("audioPlayer")]
+script = ExtResource("3_47s4i")
+audioPlayer = NodePath("AudioStreamPlayer")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="BeepoAudio"]
 
 [node name="DebugWindow" type="TextEdit" parent="."]
 visible = false

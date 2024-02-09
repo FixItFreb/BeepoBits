@@ -54,6 +54,6 @@ public partial class ChannelRedeemNode : Node
 
     public bool CheckRedeem(TwitchRedeemPayload payload)
     {
-        return redeemTitle.IsNullOrEmpty() || payload.data.reward.title.Hash() == titleHash;
+        return !redeemTitle.IsNullOrEmpty() && payload.data.reward.title.Hash() == titleHash;
     }
 }

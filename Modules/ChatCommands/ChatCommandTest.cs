@@ -25,10 +25,7 @@ public partial class ChatCommandTest : ChatCommandNode
             testString = string.Format("{0} executed the testma command!", payload.data.chatter_user_name);
         }
 
-        TrailsManager.Instance.TriggerSet("FingersL");
-        TrailsManager.Instance.TriggerSet("FingersR");
-
         BeepoCore.DebugLog(testString);
-        GD.Print(payload.rawPayload);
+        //GD.Print(payload.rawPayload);
     }
 }

@@ -16,10 +16,17 @@ public partial class BeepoCore : Node
     private List<RaidEventNode> raidEvents = new List<RaidEventNode>();
 
     public static List<BeepoAvatar> currentAvatars = new List<BeepoAvatar>();
+    
+    private static Node3D avatarAnchor;
+    public static Node3D AvatarAnchor { get { return avatarAnchor; } }
+    private static Node3D worldRoot;
+    public static Node3D WorldRoot { get { return worldRoot; } }
 
     [Signal] public delegate void NewAvatarRegisteredEventHandler(BeepoAvatar newAvatar);
     [Signal] public delegate void AvatarUnregisteredEventHandler(BeepoAvatar avatar);
     [Signal] public delegate void OnDebugLogEventHandler(string debugString);
+
+    public static Camera3D CurrentCamera { get { return _instance.GetViewport().GetCamera3D(); } }
 
     public override void _EnterTree()
     {
@@ -31,6 +38,10 @@ public partial class BeepoCore : Node
         twitchService.ChannelPointsRedeem += OnRedeemTriggered;
         twitchService.ChannelChatMessage += OnMessageTriggered;
         twitchService.ChannelRaid += OnRaidTriggered;
+
+        // TODO: This needs to be less hardcoded
+        worldRoot = GetNode<Node3D>("../World");
+        avatarAnchor = GetNode<Node3D>("../World/AvatarAnchor");
     }
 
     private void OnRedeemTriggered(TwitchRedeemPayload payload)

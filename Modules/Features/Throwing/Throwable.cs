@@ -8,6 +8,8 @@ public partial class Throwable : RigidBody3D
 {
     private Tween tweenPath;
     private bool firstCollision = false;
+    public bool FirstCollision { get { return firstCollision; } }
+
     [Export] private CollisionShape3D collider;
     [Export] private AudioStreamPlayer3D throwAudio;
 
@@ -36,7 +38,7 @@ public partial class Throwable : RigidBody3D
     {
         if (tweenPath != null)
         {
-            tweenPath.Stop();
+            tweenPath.Kill();
             tweenPath = null;
         }
         Freeze = false;
