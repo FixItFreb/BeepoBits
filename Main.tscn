@@ -1,6 +1,5 @@
-[gd_scene load_steps=13 format=3 uid="uid://cvl4o8pvf837i"]
+[gd_scene load_steps=11 format=3 uid="uid://cvl4o8pvf837i"]
 
-[ext_resource type="Texture2D" uid="uid://c5sv75uk780g4" path="res://beepo.png" id="3_1d4df"]
 [ext_resource type="Script" path="res://Modules/Features/Throwing/ThrowRedeem.cs" id="3_exm2m"]
 [ext_resource type="Script" path="res://Modules/ChatCommands/ChatCommandTest.cs" id="3_jjesa"]
 [ext_resource type="PackedScene" uid="uid://ckwfgjpsp07xk" path="res://Modules/Features/Throwing/throw_path.tscn" id="4_3663d"]
@@ -8,11 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://dp0eld2tutl30" path="res://Modules/Features/Throwing/Throwables/base_throwable.tscn" id="4_erxtx"]
 [ext_resource type="Script" path="res://Modules/Core/MicInputDetection.cs" id="7_6f56n"]
 [ext_resource type="PackedScene" uid="uid://bq4fme2rh6lm3" path="res://Modules/Features/Throwing/throwing_launcher.tscn" id="7_o88vu"]
-[ext_resource type="PackedScene" uid="uid://bpc5c5r478dc3" path="res://Modules/Avatars/BeepoAvatarPNG.tscn" id="8_5pqek"]
+[ext_resource type="PackedScene" uid="uid://bpc5c5r478dc3" path="res://Modules/Avatars/PNGAvatar/BeepoAvatarPNG.tscn" id="8_5pqek"]
 [ext_resource type="Script" path="res://Modules/Features/Throwing/ThrowingManager.cs" id="8_yu26u"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_54iar"]
-size = Vector3(5, 5, 0.2)
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_cyfpr"]
 
@@ -69,14 +65,6 @@ enableHover = true
 enableJump = true
 frequencyX = 0.14
 frequencyY = 0.21
-jumpMagnitude = 1.5
-
-[node name="AvatarSprite" parent="AvatarAnchor/BeepoAvatar/BeepoAvatarPNG" index="0"]
-texture = ExtResource("3_1d4df")
-
-[node name="Collider" parent="AvatarAnchor/BeepoAvatar/BeepoAvatarPNG" index="1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
-shape = SubResource("BoxShape3D_54iar")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.14889, 7.24209)
