@@ -21,6 +21,8 @@ public partial class ChannelRedeemNode : Node
 
     protected uint titleHash = 0;
 
+    [Export] public BeepoEventLookup eventLookup;
+
     [Signal] public delegate void OnRedeemTriggerEventHandler(TwitchRedeemPayload payload);
 
     public override void _EnterTree()

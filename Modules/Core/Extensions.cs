@@ -26,11 +26,13 @@ public static class RayCast3DExt
         if(collider is T tCollider)
         {
             colliderObject = tCollider;
+            collider.Free();
             return true;
         }
         else
         {
             colliderObject = default(T);
+            collider.Free();
             return false;
         }
     }
@@ -164,7 +166,6 @@ public static class IEnumerableExt
     {
         return source == null || source.Count() == 0;
     }
-
 
     /// <summary>
     /// Returns true if source IEnumerable contains all entries contained in toCheck

@@ -2,17 +2,10 @@ using Godot;
 using Godot.Collections;
 using System;
 
-public partial class PropsManager : Node
+public partial class PropsManager : EventDomainNode<PropsManager>, IEventDomain
 {
-    private static PropsManager _instance;
-    public static PropsManager Instance { get { return _instance; } }
-
-    [Export] private Dictionary<string, Prop> currentProps = new Dictionary<string, Prop>();
-
-    public override void _EnterTree()
-    {
-        _instance = this;
-    }
+    [Export] public Dictionary<StringName, NodePath> propAnchors = new Dictionary<StringName, NodePath>();
+    [Export] private Dictionary<StringName, Prop> currentProps = new Dictionary<StringName, Prop>();
 
     public void RegisterProp(Prop toAdd)
     {
@@ -39,11 +32,15 @@ public partial class PropsManager : Node
         }
     }
 
-    public void AttachProp(string propName, string nodePath)
+    public void AttachProp(StringName propName, StringName anchorName, float duration = 0)
     {
         if (currentProps.TryGetValue(propName, out Prop prop))
         {
-            prop.AttachToNode(nodePath);
+            if(prop == null)
+            {
+                GD.Print("uwotm8");
+            }
+            prop.AttachToNode(anchorName, duration);
         }
     }
 }

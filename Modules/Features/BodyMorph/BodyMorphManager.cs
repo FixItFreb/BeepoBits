@@ -1,17 +1,9 @@
 using Godot;
 using System;
 
-public partial class BodyMorphManager : Node
+public partial class BodyMorphManager : EventDomainNode<BodyMorphManager>, IEventDomain
 {
-    private static BodyMorphManager _instance;
-    public static BodyMorphManager Instance { get { return _instance; } }
-    
     [Export] public BodyMorphSet[] morphSets;
-
-    public override void _EnterTree()
-    {
-        _instance = this;
-    }
 
     public void TriggerSet(StringName bodyMorphSet)
     {

@@ -2,17 +2,9 @@ using Godot;
 using Godot.Collections;
 using System;
 
-public partial class TrailsManager : Node
+public partial class TrailsManager : EventDomainNode<TrailsManager>, IEventDomain
 {
-    private static TrailsManager _instance;
-    public static TrailsManager Instance { get { return _instance; } }
-
     [Export] public Array<TrailSet> trailSets = new Array<TrailSet>();
-
-    public override void _EnterTree()
-    {
-        _instance = this;
-    }
 
     public void TriggerSet(StringName setName, float duration = 0)
     {

@@ -56,7 +56,7 @@ public partial class ChatCommandNode : Node
 
     protected bool CheckPermissions(TwitchChatMessagePayload payload)
     {
-        if(requiredBadges == TwitchBadge.None)
+        if(requiredBadges == TwitchBadge.None || (requiredBadges & TwitchBasePayload.GetBadgeFlags(payload.data.badges)) != 0)
         {
             return true;
         }

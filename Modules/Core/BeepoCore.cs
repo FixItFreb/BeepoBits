@@ -22,6 +22,8 @@ public partial class BeepoCore : Node
     private static Node3D worldRoot;
     public static Node3D WorldRoot { get { return worldRoot; } }
 
+    public List<IEventDomain> eventDomains = new List<IEventDomain>();
+
     [Signal] public delegate void NewAvatarRegisteredEventHandler(BeepoAvatar newAvatar);
     [Signal] public delegate void AvatarUnregisteredEventHandler(BeepoAvatar avatar);
     [Signal] public delegate void OnDebugLogEventHandler(string debugString);
@@ -42,6 +44,25 @@ public partial class BeepoCore : Node
         // TODO: This needs to be less hardcoded
         worldRoot = GetNode<Node3D>("../World");
         avatarAnchor = GetNode<Node3D>("../World/AvatarAnchor");
+    }
+
+    public static void RegisterEventDomain(IEventDomain newDomain)
+    {
+        if(!_instance.eventDomains.Contains(newDomain))
+        {
+            _instance.eventDomains.Add(newDomain);
+        }
+    }
+
+    public static void SendEventLookup(BeepoEventLookup eventLookup)
+    {
+        foreach(IEventDomain d in _instance.eventDomains)
+        {
+            if(d.EventDomainID == eventLookup.eventDomainID)
+            {
+                d.TriggerEvent(eventLookup);
+            }
+        }
     }
 
     private void OnRedeemTriggered(TwitchRedeemPayload payload)

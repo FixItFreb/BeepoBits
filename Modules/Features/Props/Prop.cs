@@ -1,14 +1,17 @@
 using Godot;
 using System;
 
-public partial class Prop : RemoteTransform3D
+public partial class Prop : Node3D
 {
-    [Export] public string propName;
+    [Export] public StringName propName;
     [Export] public Node3D attachedTo;
+
+    private float lifeTime = 0;
 
     public override void _Ready()
     {
         PropsManager.Instance.RegisterProp(this);
+        SetActive(false);
     }
 
     public override void _ExitTree()
@@ -16,24 +19,42 @@ public partial class Prop : RemoteTransform3D
         PropsManager.Instance.UnregisterProp(this);
     }
 
-    public void AttachToNode(NodePath nodePath)
+    public override void _Process(double delta)
     {
-        Node3D attachTo = GetNode<Node3D>(nodePath);
-        if (attachTo != null)
+        if(attachedTo != null)
         {
-            attachedTo = GetNode<Node3D>(nodePath);
-            RemotePath = nodePath;
+            GlobalTransform = attachedTo.GlobalTransform;
+            
+            if (lifeTime > 0)
+            {
+                lifeTime -= (float)delta;
+                if (lifeTime <= 0)
+                {
+                    SetActive(false);
+                }
+            }
         }
     }
 
-    public void AttachToNode(Node3D attachTo)
+    public void AttachToNode(StringName anchorName, float duration = 0)
     {
-        attachedTo = attachTo;
-        RemotePath = attachTo.GetPath();
+        if(PropsManager.Instance.propAnchors.TryGetValue(anchorName, out NodePath anchor))
+        {
+            attachedTo = PropsManager.Instance.GetNode<Node3D>(anchor);
+            if (duration > 0)
+            {
+                lifeTime = duration;
+            }
+            SetActive(true);
+        }
     }
 
     public void SetActive(bool isActive)
     {
+        if (!isActive)
+        {
+            attachedTo = null;
+        }
         Visible = isActive;
         SetProcess(isActive);
     }

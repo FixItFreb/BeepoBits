@@ -2,7 +2,7 @@ using Godot;
 using Godot.Collections;
 using System;
 
-public partial class TrailPoint : GodotObject
+public partial class TrailPoint : RefCounted
 {
     public Vector3 position;
     public Vector3 widthFrom;

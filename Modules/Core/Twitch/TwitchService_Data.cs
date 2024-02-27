@@ -12,8 +12,32 @@ public enum TwitchBadge
     VIP = 0x8,
 }
 
-public abstract partial class TwitchBasePayload : GodotObject
+public abstract partial class TwitchBasePayload : RefCounted
 {
+    public static TwitchBadge GetBadgeFlags(TwitchBadgeStruct[] badges)
+    {
+        TwitchBadge badgeFlags = TwitchBadge.None;
+        foreach(TwitchBadgeStruct b in badges)
+        {
+            switch(b.setid)
+            {
+                case "broadcaster":
+                    badgeFlags |= TwitchBadge.Broadcaster;
+                    break;
+                case "moderator":
+                    badgeFlags |= TwitchBadge.Moderator;
+                    break;
+                case "subscriber":
+                    badgeFlags |= TwitchBadge.Subscriber;
+                    break;
+                case "vip":
+                    badgeFlags |= TwitchBadge.VIP;
+                    break;
+            }
+        }
+        return badgeFlags;
+    }
+
     public Dictionary rawPayload { get; private set; }
 
     public TwitchBasePayload(Dictionary _rawPayload)

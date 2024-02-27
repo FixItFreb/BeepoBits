@@ -3,7 +3,7 @@ using System.Text;
 
 namespace uOSC
 {
-    public partial class MessageObject : Godot.GodotObject
+    public partial class MessageObject : Godot.RefCounted
     {
         public Message data;
         
