@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://ckwfgjpsp07xk"]
 
-[ext_resource type="Script" path="res://Modules/Features/Throwing/ThrowPath.cs" id="1_n67f0"]
+[ext_resource type="Script" path="res://addons/BeepoFeatures/Throwing/ThrowPath.cs" id="1_n67f0"]
 
 [sub_resource type="Curve3D" id="Curve3D_862r1"]
 bake_interval = 5.0

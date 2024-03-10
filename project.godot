@@ -21,7 +21,7 @@ driver/enable_input=true
 
 [autoload]
 
-BeepoCore="*res://Modules/Core/BeepoCore.tscn"
+BeepoCore="*res://addons/BeepoBits/BeepoCore.tscn"
 
 [display]
 
@@ -34,7 +34,7 @@ project/assembly_name="OpenBeepoBox"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/gif-importer/plugin.cfg", "res://addons/vrm/plugin.cfg")
+enabled=PackedStringArray("res://addons/BeepoBits/plugin.cfg", "res://addons/BeepoFeatures/plugin.cfg", "res://addons/BeepoTwitch/plugin.cfg", "res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/gif-importer/plugin.cfg", "res://addons/vrm/plugin.cfg")
 
 [filesystem]
 

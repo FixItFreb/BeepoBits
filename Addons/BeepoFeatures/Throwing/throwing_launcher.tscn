@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bq4fme2rh6lm3"]
 
-[ext_resource type="Script" path="res://Modules/Features/Throwing/ThrowingLauncher.cs" id="1_acnf4"]
+[ext_resource type="Script" path="res://addons/BeepoFeatures/Throwing/ThrowingLauncher.cs" id="1_acnf4"]
 
 [sub_resource type="PrismMesh" id="PrismMesh_d3msn"]
 

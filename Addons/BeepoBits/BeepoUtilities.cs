@@ -1,6 +1,6 @@
 using System;
 
-public static class Utilities
+public static class BeepoUtilities
 {
     public static bool IsMultipleOfFour(int num)
     {

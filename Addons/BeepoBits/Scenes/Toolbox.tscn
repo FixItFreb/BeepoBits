@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b0psdmmkau57r"]
 
-[ext_resource type="Script" path="res://Modules/Core/Toolbox/Toolbox.cs" id="1_3wama"]
+[ext_resource type="Script" path="res://addons/BeepoBits/Toolbox/Toolbox.cs" id="1_3wama"]
 
 [node name="Toolbox" type="Window" node_paths=PackedStringArray("debugTextWindow")]
 title = "Toolbox"

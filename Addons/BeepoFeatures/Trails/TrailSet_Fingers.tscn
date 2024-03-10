@@ -1,11 +1,11 @@
 [gd_scene load_steps=12 format=3 uid="uid://blv3jufvsork1"]
 
-[ext_resource type="Script" path="res://Modules/Features/Trails/TrailSet.cs" id="1_jd3cj"]
-[ext_resource type="Resource" uid="uid://ue02nd1m56ol" path="res://Modules/Features/Trails/GradientSets/TrailGradientSet_Enby.tres" id="2_8160f"]
-[ext_resource type="Resource" uid="uid://b833rhjan630" path="res://Modules/Features/Trails/GradientSets/TrailGradientSet_Pride.tres" id="3_4i8y8"]
-[ext_resource type="Resource" uid="uid://dkyklhihr0n36" path="res://Modules/Features/Trails/GradientSets/TrailGradientSet_Trans.tres" id="4_d6vr8"]
-[ext_resource type="Material" uid="uid://c35d3t1f6acjb" path="res://Modules/Features/Trails/TrailMaterial.tres" id="5_2e44g"]
-[ext_resource type="Script" path="res://Modules/Features/Trails/TrailEffect.cs" id="6_yi53g"]
+[ext_resource type="Script" path="res://addons/BeepoFeatures/Trails/TrailSet.cs" id="1_jd3cj"]
+[ext_resource type="Resource" uid="uid://ue02nd1m56ol" path="res://addons/BeepoFeatures/Trails/GradientSets/TrailGradientSet_Enby.tres" id="2_8160f"]
+[ext_resource type="Resource" uid="uid://b833rhjan630" path="res://addons/BeepoFeatures/Trails/GradientSets/TrailGradientSet_Pride.tres" id="3_4i8y8"]
+[ext_resource type="Resource" uid="uid://dkyklhihr0n36" path="res://addons/BeepoFeatures/Trails/GradientSets/TrailGradientSet_Trans.tres" id="4_d6vr8"]
+[ext_resource type="Material" uid="uid://c35d3t1f6acjb" path="res://addons/BeepoFeatures/Trails/TrailMaterial.tres" id="5_2e44g"]
+[ext_resource type="Script" path="res://addons/BeepoFeatures/Trails/TrailEffect.cs" id="6_yi53g"]
 
 [sub_resource type="Gradient" id="Gradient_rc73j"]
 offsets = PackedFloat32Array(0, 0.8, 1)

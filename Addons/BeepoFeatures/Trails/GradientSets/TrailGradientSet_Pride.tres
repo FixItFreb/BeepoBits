@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="TrailGradientSet" load_steps=7 format=3 uid="uid://b833rhjan630"]
 
-[ext_resource type="Script" path="res://Modules/Features/Trails/TrailGradientSet.cs" id="1_2ypne"]
+[ext_resource type="Script" path="res://addons/BeepoFeatures/Trails/TrailGradientSet.cs" id="1_2ypne"]
 
 [sub_resource type="Gradient" id="Gradient_hqpvj"]
 offsets = PackedFloat32Array(0, 0.8, 1)

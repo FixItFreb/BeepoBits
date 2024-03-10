@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://i33olrb0q1r3"]
 
-[ext_resource type="Script" path="res://Modules/Core/BeepoAvatar.cs" id="1_a8c3y"]
+[ext_resource type="Script" path="res://addons/BeepoBits/BeepoAvatar.cs" id="1_a8c3y"]
 
 [node name="BeepoAvatar" type="Node3D" node_paths=PackedStringArray("headPostion")]
 script = ExtResource("1_a8c3y")

@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://ct8qu0j3b5uoa"]
 
-[ext_resource type="Script" path="res://Modules/Core/BeepoCore.cs" id="1_ltca3"]
-[ext_resource type="Script" path="res://Modules/Core/Twitch/TwitchService.cs" id="2_1ujbl"]
-[ext_resource type="Script" path="res://Modules/Core/BeepoAudio.cs" id="3_47s4i"]
+[ext_resource type="Script" path="res://addons/BeepoBits/BeepoCore.cs" id="1_ltca3"]
+[ext_resource type="Script" path="res://addons/BeepoTwitch/TwitchService.cs" id="2_1ujbl"]
+[ext_resource type="Script" path="res://addons/BeepoBits/BeepoAudio.cs" id="3_47s4i"]
 
 [node name="BeepoCore" type="Node" node_paths=PackedStringArray("twitchService")]
 script = ExtResource("1_ltca3")

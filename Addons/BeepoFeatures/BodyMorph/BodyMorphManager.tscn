@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://db1rs4t145rwe"]
 
-[ext_resource type="Script" path="res://Modules/Features/BodyMorph/BodyMorphManager.cs" id="1_vphf8"]
+[ext_resource type="Script" path="res://addons/BeepoFeatures/BodyMorph/BodyMorphManager.cs" id="1_vphf8"]
 
 [node name="BodyMorphManager" type="Node" node_paths=PackedStringArray("morphSets")]
 script = ExtResource("1_vphf8")
