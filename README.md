@@ -1,8 +1,12 @@
 # OpenBeepoBox
 A VTuber streaming assistant toolkit in Godot
 
+# Requirements
+Most addons in this repository are optional, except for BeepoBits which is required for all other addons to work. You always have to include the BeepoBits addon when working with this toolkit.
+
 # Installation
-Clone this repository into the addons folder in your godot project
+1. Download the addons of interest to you and put them into the addons folder in your godot project. 
+2. In `project settings -> Autoload` add `res://addons/BeepoBits/BeepoCore.tscn`.
 
 # Credits
 The [V-Sekai team](https://v-sekai.org/about) for making the VRM importer for Godot
