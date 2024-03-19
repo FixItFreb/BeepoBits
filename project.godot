@@ -26,6 +26,8 @@ BeepoCore="*res://addons/BeepoBits/BeepoCore.tscn"
 [display]
 
 window/size/always_on_top=true
+window/size/transparent=true
+window/per_pixel_transparency/allowed=true
 window/subwindows/embed_subwindows=false
 
 [dotnet]
@@ -118,4 +120,6 @@ avatar_move_mod={
 
 [rendering]
 
+environment/defaults/default_clear_color=Color(0.301961, 0.301961, 0.301961, 0)
+viewport/transparent_background=true
 limits/opengl/max_lights_per_object=16
