@@ -9,7 +9,7 @@ export_presets.cfg
 # Imported translations (automatically generated from CSV files)
 *.translation
 
-# Editor ignored
+# Editor ignores
 .vscode
 
 # Mono-specific ignores
