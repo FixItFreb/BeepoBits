@@ -19,3 +19,4 @@ mono_crash.*.json
 
 # Beepo specific ignore
 Local_*/
+BeepoAssets/*.import
