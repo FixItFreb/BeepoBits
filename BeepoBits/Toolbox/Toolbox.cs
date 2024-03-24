@@ -7,7 +7,7 @@ public partial class Toolbox : Node
 
     public override void _Ready()
     {
-        BeepoCore.Instance.Connect(BeepoCore.SignalName.OnDebugLog, Callable.From((string debugString) => { DebugLog(debugString); }));
+        BeepoCore.GetInstance().Connect(BeepoCore.SignalName.OnDebugLog, Callable.From((string debugString) => { DebugLog(debugString); }));
     }
 
     private void DebugLog(string debugString)

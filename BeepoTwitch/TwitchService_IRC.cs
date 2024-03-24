@@ -204,7 +204,7 @@ public partial class TwitchService_IRC : RefCounted
             {
                 if (twitchService.debugPackets)
                 {
-                    BeepoCore.DebugLog("IRC: " + message);
+                    // BeepoCore.DebugLog("IRC: " + message);
                 }
                 Dictionary parsedMessage = ParseIRCMessage(message);
                 string messageCommand = ((string)parsedMessage["command"]).ToLower();
@@ -225,7 +225,7 @@ public partial class TwitchService_IRC : RefCounted
                         string msgID = parsedMessage["tags"].As<Dictionary>()["msg-id"].ToString();
                         if (twitchService.debugPackets)
                         {
-                            BeepoCore.DebugLog("Message ID: " + msgID);
+                            // BeepoCore.DebugLog("Message ID: " + msgID);
                         }
                         if (msgID == "raid")
                         {

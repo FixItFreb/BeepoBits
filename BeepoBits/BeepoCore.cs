@@ -5,9 +5,6 @@ using System.Collections.Generic;
 
 public partial class BeepoCore : Node
 {
-    private BeepoCore _instance;
-    public BeepoCore Instance { get { return _instance; } }
-
     [Export] public char commandPrefix = '!';
 
     public static List<BeepoAvatar> currentAvatars = new List<BeepoAvatar>();
@@ -23,11 +20,10 @@ public partial class BeepoCore : Node
     [Signal] public delegate void AvatarUnregisteredEventHandler(BeepoAvatar avatar);
     [Signal] public delegate void OnDebugLogEventHandler(string debugString);
 
-    public Camera3D CurrentCamera { get { return _instance.GetViewport().GetCamera3D(); } }
+    public Camera3D CurrentCamera { get { return GetViewport().GetCamera3D(); } }
 
     public override void _EnterTree()
     {
-        _instance = this;
     }
 
     public override void _Ready()
@@ -39,6 +35,11 @@ public partial class BeepoCore : Node
 
     }
 
+    public static BeepoCore GetInstance()
+    {
+        return ((SceneTree)Engine.GetMainLoop()).Root.GetNode<BeepoCore>("BeepoBits_Core");
+    }
+
     public bool RegisterEventDomain(EventDomainNode newDomain)
     {
         if (!eventDomains.ContainsKey(newDomain.EventDomainID))
@@ -47,6 +48,18 @@ public partial class BeepoCore : Node
             return true;
         }
         return false;
+    }
+
+    public bool RegisterEventListener(ListenerNode newListener)
+    {
+        EventDomainNode eventDomain;
+        if (!eventDomains.TryGetValue(newListener.EventDomainID, out eventDomain))
+        {
+            return false;
+        }
+
+        eventDomain.AddListener(newListener);
+        return true;
     }
 
     public void SendEventLookup(BeepoEvent beepoEvent)
@@ -128,7 +141,7 @@ public partial class BeepoCore : Node
         }
 
         currentAvatars.Add(newAvatar);
-        _instance.EmitSignal(BeepoCore.SignalName.NewAvatarRegistered, newAvatar);
+        EmitSignal(BeepoCore.SignalName.NewAvatarRegistered, newAvatar);
     }
 
     public void UnregisterAvatar(BeepoAvatar avatar)
@@ -136,13 +149,13 @@ public partial class BeepoCore : Node
         if (currentAvatars.Contains(avatar))
         {
             currentAvatars.Remove(avatar);
-            _instance.EmitSignal(BeepoCore.SignalName.AvatarUnregistered, avatar);
+            EmitSignal(BeepoCore.SignalName.AvatarUnregistered, avatar);
         }
     }
 
     public void DebugLog(string debugText)
     {
         GD.Print(Time.GetTimeStringFromSystem() + " : " + debugText);
-        _instance.EmitSignal(BeepoCore.SignalName.OnDebugLog, Time.GetTimeStringFromSystem() + " : " + debugText);
+        EmitSignal(BeepoCore.SignalName.OnDebugLog, Time.GetTimeStringFromSystem() + " : " + debugText);
     }
 }

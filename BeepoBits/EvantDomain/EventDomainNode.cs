@@ -23,7 +23,7 @@ public partial class EventDomainNode : Node
 
     public override void _EnterTree()
     {
-        var beepoCore = GetNode<BeepoCore>("/root/BeepoBits_Core");
+        var beepoCore = BeepoCore.GetInstance();
         if (!beepoCore.RegisterEventDomain(this)) GD.PrintErr("Failed to register domain {0}: name already in use", EventDomainID);
     }
 }
