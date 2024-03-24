@@ -16,7 +16,7 @@ public partial class BeepoCore : Node
     private List<RaidEventNode> raidEvents = new List<RaidEventNode>();
 
     public static List<BeepoAvatar> currentAvatars = new List<BeepoAvatar>();
-    
+
     private static Node3D avatarAnchor;
     public static Node3D AvatarAnchor { get { return avatarAnchor; } }
     private static Node3D worldRoot;
@@ -42,13 +42,13 @@ public partial class BeepoCore : Node
         twitchService.ChannelRaid += OnRaidTriggered;
 
         // TODO: This needs to be less hardcoded
-        worldRoot = GetNode<Node3D>("../World");
-        avatarAnchor = GetNode<Node3D>("../World/AvatarAnchor");
+        // worldRoot = GetNode<Node3D>("../World");
+        // avatarAnchor = GetNode<Node3D>("../World/AvatarAnchor");
     }
 
     public static void RegisterEventDomain(IEventDomain newDomain)
     {
-        if(!_instance.eventDomains.Contains(newDomain))
+        if (!_instance.eventDomains.Contains(newDomain))
         {
             _instance.eventDomains.Add(newDomain);
         }
@@ -56,9 +56,9 @@ public partial class BeepoCore : Node
 
     public static void SendEventLookup(BeepoEventLookup eventLookup)
     {
-        foreach(IEventDomain d in _instance.eventDomains)
+        foreach (IEventDomain d in _instance.eventDomains)
         {
-            if(d.EventDomainID == eventLookup.eventDomainID)
+            if (d.EventDomainID == eventLookup.eventDomainID)
             {
                 d.TriggerEvent(eventLookup);
             }
@@ -69,7 +69,7 @@ public partial class BeepoCore : Node
     {
         DebugLog(string.Format("Redeem: {0}, Displayname: {1}, Input: {2}", payload.data.reward.title, payload.data.user_name, payload.data.user_input));
 
-        if(channelRedeems.TryGetValue(payload.data.reward.title, out ChannelRedeemNode redeemNode))
+        if (channelRedeems.TryGetValue(payload.data.reward.title, out ChannelRedeemNode redeemNode))
         {
             redeemNode.ExecuteChannelRedeem(payload);
         }
@@ -79,7 +79,7 @@ public partial class BeepoCore : Node
     {
         DebugLog(string.Format("RaiderUsername: {0}, RaiderDisplayName: {1}, RaidCount: {2}", payload.data.from_broadcaster_user_login, payload.data.from_broadcaster_user_name, payload.data.viewers));
 
-        foreach(RaidEventNode r in raidEvents)
+        foreach (RaidEventNode r in raidEvents)
         {
             r.ExecuteRaidEvent(payload);
         }
@@ -90,15 +90,15 @@ public partial class BeepoCore : Node
         DebugLog(string.Format("FromUsername: {0}, FromDisplayName: {1}, Message: {2}, Bits: {3}", payload.data.chatter_user_login, payload.data.chatter_user_name, payload.data.message.text, payload.data.cheer.bits));
 
         string messageText = payload.data.message.text;
-        if(messageText[0] == commandPrefix)
+        if (messageText[0] == commandPrefix)
         {
             if (messageText.Length > 1)
             {
                 string[] commandString = messageText.Substring(1).Split(' ');
-                if(chatCommands.TryGetValue(commandString[0], out ChatCommandNode chatCommand))
+                if (chatCommands.TryGetValue(commandString[0], out ChatCommandNode chatCommand))
                 {
                     string[] commandParams;
-                    if(commandString.Length > 1)
+                    if (commandString.Length > 1)
                     {
                         commandParams = new string[commandString.Length - 1];
                         Array.Copy(commandString, 1, commandParams, 0, commandParams.Length);
@@ -138,7 +138,7 @@ public partial class BeepoCore : Node
 
     public void RegisterChannelRedeem(ChannelRedeemNode toAdd)
     {
-        if(!channelRedeems.ContainsKey(toAdd.RedeemTitle))
+        if (!channelRedeems.ContainsKey(toAdd.RedeemTitle))
         {
             channelRedeems.Add(toAdd.RedeemTitle, toAdd);
         }
@@ -161,7 +161,7 @@ public partial class BeepoCore : Node
 
     public static void RegisterNewAvatar(BeepoAvatar newAvatar)
     {
-        if(currentAvatars.Contains(newAvatar))
+        if (currentAvatars.Contains(newAvatar))
         {
             return;
         }

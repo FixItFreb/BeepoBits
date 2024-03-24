@@ -37,7 +37,7 @@ public partial class Throwable : RigidBody3D
 
     public override void _IntegrateForces(PhysicsDirectBodyState3D state)
     {
-        if(state.GetContactCount() > 0)
+        if (state.GetContactCount() > 0)
         {
             if (!firstCollision)
             {
@@ -54,25 +54,25 @@ public partial class Throwable : RigidBody3D
 
                 throwAudio.Play();
 
-                if (!impactVFX.IsNullOrEmpty())
-                {
-                    PackedScene vfxScene = impactVFX.GetRandom();
-                    VFXPlayer vfx = vfxScene.Instantiate<VFXPlayer>();
-                    BeepoCore.WorldRoot.AddChild(vfx);
-                    vfx.GlobalPosition = state.GetContactColliderPosition(0);
-                }
+                //     if (!impactVFX.IsNullOrEmpty())
+                //     {
+                //         PackedScene vfxScene = impactVFX.GetRandom();
+                //         VFXPlayer vfx = vfxScene.Instantiate<VFXPlayer>();
+                //         BeepoCore.WorldRoot.AddChild(vfx);
+                //         vfx.GlobalPosition = state.GetContactColliderPosition(0);
+                //     }
             }
             else if (!initialImpactEffectsOnly)
             {
                 throwAudio.Play();
 
-                if (!impactVFX.IsNullOrEmpty())
-                {
-                    PackedScene vfxScene = impactVFX.GetRandom();
-                    VFXPlayer vfx = vfxScene.Instantiate<VFXPlayer>();
-                    BeepoCore.WorldRoot.AddChild(vfx);
-                    vfx.GlobalPosition = state.GetContactColliderPosition(0);
-                }
+                // if (!impactVFX.IsNullOrEmpty())
+                // {
+                //     PackedScene vfxScene = impactVFX.GetRandom();
+                //     VFXPlayer vfx = vfxScene.Instantiate<VFXPlayer>();
+                //     BeepoCore.WorldRoot.AddChild(vfx);
+                //     vfx.GlobalPosition = state.GetContactColliderPosition(0);
+                // }
             }
         }
     }

@@ -5,14 +5,16 @@ using System;
 [Tool]
 public partial class BeepoBits : EditorPlugin
 {
+	Node3D coreScene;
+
 	public override void _EnterTree()
 	{
-		// Initialization of the plugin goes here.
+		AddAutoloadSingleton("BeepoBits_Core", "./BeepoCore.tscn");
 	}
 
 	public override void _ExitTree()
 	{
-		// Clean-up of the plugin goes here.
+		RemoveAutoloadSingleton("BeepoBits_Core");
 	}
 }
 #endif

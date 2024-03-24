@@ -28,7 +28,7 @@ public partial class SimpleInput : Node
 
     public override void _Ready()
     {
-        if(controlledCamera == null)
+        if (controlledCamera == null)
         {
             controlledCamera = BeepoCore.CurrentCamera;
         }
@@ -36,7 +36,7 @@ public partial class SimpleInput : Node
 
     public override void _Input(InputEvent inputEvent)
     {
-        if(inputEvent.TryCast(out InputEventMouseMotion motion))
+        if (inputEvent.TryCast(out InputEventMouseMotion motion))
         {
             mouseRelative = motion.Relative;
             if (Input.IsActionPressed(CamMouseLookAction))
@@ -45,7 +45,7 @@ public partial class SimpleInput : Node
                 {
                     BeepoCore.AvatarAnchor.RotateY(mouseRelative.X * mouseInputScale);
                 }
-                else if(controlHeld)
+                else if (controlHeld)
                 {
                     BeepoCore.AvatarAnchor.RotateX(mouseRelative.Y * mouseInputScale);
                 }
@@ -56,39 +56,39 @@ public partial class SimpleInput : Node
                     controlledCamera.Rotation = controlledCamera.Rotation.WithX(Mathf.Clamp(controlledCamera.Rotation.X, maxCamX.X, maxCamX.Y)).WithZ(0);
                 }
             }
-            else if(Input.IsActionPressed(AvatarMoveModifierAction))
+            else if (Input.IsActionPressed(AvatarMoveModifierAction))
             {
                 BeepoCore.AvatarAnchor.Translate(new Vector3(mouseRelative.X * mouseInputScale, -mouseRelative.Y * mouseInputScale, 0));
             }
         }
 
-        if(inputEvent.IsActionPressed(CamResetAction))
+        if (inputEvent.IsActionPressed(CamResetAction))
         {
-            if(shiftHeld)
-            {
-                ToolboxTransformPresets.Instance.ResetAvatar();
-            }
-            else
-            {
-                ToolboxTransformPresets.Instance.ResetCam();
-            }
+            // if(shiftHeld)
+            // {
+            //     ToolboxTransformPresets.Instance.ResetAvatar();
+            // }
+            // else
+            // {
+            //     ToolboxTransformPresets.Instance.ResetCam();
+            // }
             return;
         }
 
-        if(inputEvent.IsActionPressed(ShiftAction))
+        if (inputEvent.IsActionPressed(ShiftAction))
         {
             shiftHeld = true;
         }
-        else if(inputEvent.IsActionReleased(ShiftAction))
+        else if (inputEvent.IsActionReleased(ShiftAction))
         {
             shiftHeld = false;
         }
 
-        if(inputEvent.IsActionPressed(ControlAction))
+        if (inputEvent.IsActionPressed(ControlAction))
         {
             controlHeld = true;
         }
-        else if(inputEvent.IsActionReleased(ControlAction))
+        else if (inputEvent.IsActionReleased(ControlAction))
         {
             controlHeld = false;
         }
@@ -96,7 +96,7 @@ public partial class SimpleInput : Node
 
     public override void _Process(double delta)
     {
-        if(Input.IsActionPressed(CamForwardAction))
+        if (Input.IsActionPressed(CamForwardAction))
         {
             controlledCamera.GlobalPosition -= controlledCamera.Basis.Z * moveSpeed * (float)delta;
         }
