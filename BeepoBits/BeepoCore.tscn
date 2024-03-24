@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://addons/BeepoTwitch/TwitchService.cs" id="2_1ujbl"]
 [ext_resource type="Script" path="res://addons/BeepoBits/BeepoAudio.cs" id="3_47s4i"]
 
-[node name="BeepoCore" type="Node" node_paths=PackedStringArray("twitchService")]
+[node name="BeepoCore" type="Node" node_paths=PackedStringArray("twitchService") groups=["TwitchService"]]
 script = ExtResource("1_ltca3")
 twitchService = NodePath("TwitchService")
 

@@ -117,6 +117,8 @@ public partial class TwitchService : Node
     private double twitchUserIDFetchTimeToRetry = 0.0f;
     private HttpRequest twitchUserIDFetchHttpClient = null;
 
+    private BeepoCore beepoCore;
+
     private void UserIdRequestCompleted(long result, long responseCode, string[] headers, byte[] body)
     {
         Dictionary parsedResult = Json.ParseString(body.GetStringFromUtf8()).AsGodotDictionary();
@@ -208,25 +210,25 @@ public partial class TwitchService : Node
     #region Config Management
     private void LoadConfig()
     {
-        if(twitchConfigPath == "")
+        if (twitchConfigPath == "")
         {
             return;
         }
 
         ConfigFile config = new ConfigFile();
         Error err = config.Load(twitchConfigPath);
-        if(err != Error.Ok)
+        if (err != Error.Ok)
         {
             return;
         }
 
         // Load the values, but default to whatever was there (export values that
         // may have been set in the editor)
-        if(config.HasSectionKey("twitch", "twitch_username"))
+        if (config.HasSectionKey("twitch", "twitch_username"))
         {
             twitchUsername = (string)config.GetValue("twitch", "twitch_username", twitchUsername);
         }
-        if(config.HasSectionKey("twitch", "twitch_oauth_token"))
+        if (config.HasSectionKey("twitch", "twitch_oauth_token"))
         {
             twitchOAuth = (string)config.GetValue("twitch", "twitch_oauth_token");
         }
@@ -247,12 +249,12 @@ public partial class TwitchService : Node
 
     private void SetTwitchCredentials(string username, string oAuthToken)
     {
-        if(username != null && username != "")
+        if (username != null && username != "")
         {
             twitchUsername = username;
         }
 
-        if(oAuthToken != null && oAuthToken != "")
+        if (oAuthToken != null && oAuthToken != "")
         {
             twitchOAuth = oAuthToken;
         }
@@ -268,16 +270,17 @@ public partial class TwitchService : Node
     public override void _EnterTree()
     {
         _instance = this;
+        beepoCore = GetNode<BeepoCore>("/root/BeepoBits_Core");
     }
-    
+
     public override void _Ready()
     {
-        if(autoLoadCredentials)
+        if (autoLoadCredentials)
         {
             LoadConfig();
         }
 
-        if(autoSaveCredentials)
+        if (autoSaveCredentials)
         {
             SaveConfig();
         }

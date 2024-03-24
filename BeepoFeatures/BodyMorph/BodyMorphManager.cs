@@ -7,9 +7,9 @@ public partial class BodyMorphManager : EventDomainNode<BodyMorphManager>, IEven
 
     public void TriggerSet(StringName bodyMorphSet)
     {
-        foreach(BodyMorphSet b in morphSets)
+        foreach (BodyMorphSet b in morphSets)
         {
-            if(b.setName == bodyMorphSet)
+            if (b.setName == bodyMorphSet)
             {
                 b.ApplyMorphSet();
             }

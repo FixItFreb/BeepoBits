@@ -30,7 +30,7 @@ public partial class SimpleInput : Node
     {
         if (controlledCamera == null)
         {
-            controlledCamera = BeepoCore.CurrentCamera;
+            // controlledCamera = BeepoCore.CurrentCamera;
         }
     }
 
