@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/BeepoBits/BeepoCore.cs" id="1_ltca3"]
 [ext_resource type="Script" path="res://addons/BeepoTwitch/TwitchService.cs" id="2_1ujbl"]
 [ext_resource type="Script" path="res://addons/BeepoBits/BeepoAudio.cs" id="3_47s4i"]
-[ext_resource type="Script" path="res://addons/BeepoBits/EvantDomain/EventDomainNode.cs" id="4_7u5ss"]
+[ext_resource type="Script" path="res://addons/BeepoBits/Events/EventDomainNode.cs" id="4_7u5ss"]
 
 [node name="BeepoCore" type="Node"]
 script = ExtResource("1_ltca3")

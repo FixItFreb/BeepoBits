@@ -1,5 +1,11 @@
 # OpenBeepoBox
-A VTuber streaming assistant toolkit in Godot
+A modular VTuber streaming assistant toolkit in Godot
+
+The addons availble in the tookit are:
+- BeepoBits - The core functionality of the toolkit, has to be always included.
+- BeepoAvatars - Custom scripts and nodes for running PNG/Inochi/VRM avatars.
+- BeepoTwitch - Twitch integration for retrieving events such as follows, subscriptions, raids etc.
+- BeepoFeatures - Extra effects you can apply to avatars compatible with BeepoAvatars.
 
 # Requirements
 Most addons in this repository are optional, except for BeepoBits which is required for all other addons to work. You always have to include the BeepoBits addon when working with this toolkit.

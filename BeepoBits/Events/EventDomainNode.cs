@@ -6,11 +6,11 @@ using Godot;
 public partial class EventDomainNode : Node
 {
     [Export] public StringName EventDomainID { get; private set; }
-    List<ListenerNode> listeners = new();
+    List<IBeepoListener> listeners = new();
 
-    public void AddListener(ListenerNode node)
+    public void AddListener(IBeepoListener listener)
     {
-        listeners.Add(node);
+        listeners.Add(listener);
     }
 
     public void NotifyListeners(BeepoEvent beepoEvent)
