@@ -1,20 +1,21 @@
 #if TOOLS
 using Godot;
 using System;
+using System.Net.NetworkInformation;
 
 [Tool]
 public partial class BeepoBits : EditorPlugin
 {
-	Node3D coreScene;
+	public static readonly string SingletonName = "BeepoBits_Core";
 
 	public override void _EnterTree()
 	{
-		AddAutoloadSingleton("BeepoBits_Core", "./BeepoCore.tscn");
+		AddAutoloadSingleton(SingletonName, "./BeepoCore.tscn");
 	}
 
 	public override void _ExitTree()
 	{
-		RemoveAutoloadSingleton("BeepoBits_Core");
+		RemoveAutoloadSingleton(SingletonName);
 	}
 }
 #endif

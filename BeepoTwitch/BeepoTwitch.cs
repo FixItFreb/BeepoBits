@@ -5,14 +5,15 @@ using System;
 [Tool]
 public partial class BeepoTwitch : EditorPlugin
 {
+	public static readonly string SingletonName = "BeepoBits_Twitch";
 	public override void _EnterTree()
 	{
-		// Initialization of the plugin goes here.
+		AddAutoloadSingleton(SingletonName, "./TwitchService.cs");
 	}
 
 	public override void _ExitTree()
 	{
-		// Clean-up of the plugin goes here.
+		RemoveAutoloadSingleton(SingletonName);
 	}
 }
 #endif

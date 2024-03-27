@@ -25,7 +25,7 @@ public partial class TwitchEmote : Resource
         {
             HttpRequest emoteAnimImageRequest = new HttpRequest();
             emoteAnimImageRequest.Name = "temp_request";
-            TwitchService.Instance.AddChild(emoteAnimImageRequest);
+            TwitchService.GetInstance().AddChild(emoteAnimImageRequest);
 
             emoteAnimImageRequest.Request(emoteAddress.Replace("/static/", "/animated/"));
             emoteAnimImageRequest.Connect(HttpRequest.SignalName.RequestCompleted, Callable.From((long result, long responseCode, string[] headers, byte[] body) =>
@@ -54,7 +54,7 @@ public partial class TwitchEmote : Resource
 
         HttpRequest emotStaticImageRequest = new HttpRequest();
         emotStaticImageRequest.Name = "temp_request";
-        TwitchService.Instance.AddChild(emotStaticImageRequest);
+        TwitchService.GetInstance().AddChild(emotStaticImageRequest);
 
         emotStaticImageRequest.Request(emoteAddress);
         emotStaticImageRequest.Connect(HttpRequest.SignalName.RequestCompleted, Callable.From((long result, long responseCode, string[] headers, byte[] body) =>

@@ -8,8 +8,6 @@ public partial class TwitchService : Node
 {
     // Static Variables
     public static float twitchConnectRetryTime = 5.0f;
-    private static TwitchService _instance;
-    public static TwitchService Instance { get { return _instance; } }
 
     // Config Variables
 
@@ -118,6 +116,11 @@ public partial class TwitchService : Node
     private HttpRequest twitchUserIDFetchHttpClient = null;
 
     private BeepoCore beepoCore;
+
+    public static TwitchService GetInstance()
+    {
+        return ((SceneTree)Engine.GetMainLoop()).Root.GetNode<TwitchService>(BeepoTwitch.SingletonName);
+    }
 
     private void UserIdRequestCompleted(long result, long responseCode, string[] headers, byte[] body)
     {
@@ -269,8 +272,7 @@ public partial class TwitchService : Node
     #region Normal Node entry points
     public override void _EnterTree()
     {
-        _instance = this;
-        beepoCore = GetNode<BeepoCore>("/root/BeepoBits_Core");
+        beepoCore = BeepoCore.GetInstance();
     }
 
     public override void _Ready()
