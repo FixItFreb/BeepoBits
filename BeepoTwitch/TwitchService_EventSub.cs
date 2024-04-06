@@ -14,6 +14,7 @@ public partial class TwitchService_EventSub : RefCounted
     private HttpRequest twitchSubFetchHttpClient = null;
 
     public static readonly string TwitchSubEndpoint = "https://api.twitch.tv/helix/eventsub/subscriptions";
+    // public static readonly string TwitchSubURL = "ws://127.0.0.1:8080/ws";
     public static readonly string TwitchSubURL = "wss://eventsub.wss.twitch.tv/ws";
 
     public void Init(TwitchService newTwitchService)
@@ -78,18 +79,8 @@ public partial class TwitchService_EventSub : RefCounted
 
     private void ClientEventSubHandleConnectionEstablished(int peerID)
     {
-        Dictionary channelUpdateRegistrationJson = new Dictionary();
-
-        channelUpdateRegistrationJson.Add("type", "channel.update");
-        channelUpdateRegistrationJson.Add("version", "2");
-        Dictionary conditionData = new Dictionary();
-        conditionData.Add("broadcaster_user_id", twitchService.TwitchUserID.ToString());
-        channelUpdateRegistrationJson.Add("condition", conditionData);
-        Dictionary transportData = new Dictionary();
-        transportData.Add("method", "websocket");
-        transportData.Add("session_id", eventSubSessionID);
-        channelUpdateRegistrationJson.Add("transport", transportData);
-        MakeSubRequest(channelUpdateRegistrationJson);
+        Dictionary conditionData;
+        Dictionary transportData;
 
         Dictionary followEventRegistrationJson = new Dictionary();
         followEventRegistrationJson.Add("type", "channel.follow");
@@ -104,17 +95,43 @@ public partial class TwitchService_EventSub : RefCounted
         followEventRegistrationJson.Add("transport", transportData);
         MakeSubRequest(followEventRegistrationJson);
 
+        Dictionary raidEventRegistrationJson = new Dictionary();
+        raidEventRegistrationJson.Add("type", "channel.raid");
+        raidEventRegistrationJson.Add("version", "2");
+        conditionData = new Dictionary();
+        conditionData.Add("broadcaster_user_id", twitchService.TwitchUserID.ToString());
+        conditionData.Add("moderator_user_id", twitchService.TwitchUserID.ToString());
+        raidEventRegistrationJson.Add("condition", conditionData);
+        transportData = new Dictionary();
+        transportData.Add("method", "websocket");
+        transportData.Add("session_id", eventSubSessionID);
+        raidEventRegistrationJson.Add("transport", transportData);
+        MakeSubRequest(raidEventRegistrationJson);
+
         Dictionary subEventRegistrationJson = new Dictionary();
-        subEventRegistrationJson.Add("type", "channel.subscription.message");
+        subEventRegistrationJson.Add("type", "channel.subscribe");
         subEventRegistrationJson.Add("version", "1");
         conditionData = new Dictionary();
         conditionData.Add("broadcaster_user_id", twitchService.TwitchUserID.ToString());
+        conditionData.Add("moderator_user_id", twitchService.TwitchUserID.ToString());
         subEventRegistrationJson.Add("condition", conditionData);
         transportData = new Dictionary();
         transportData.Add("method", "websocket");
         transportData.Add("session_id", eventSubSessionID);
         subEventRegistrationJson.Add("transport", transportData);
         MakeSubRequest(subEventRegistrationJson);
+
+        Dictionary resubEventRegistrationJson = new Dictionary();
+        resubEventRegistrationJson.Add("type", "channel.subscription.message");
+        resubEventRegistrationJson.Add("version", "1");
+        conditionData = new Dictionary();
+        conditionData.Add("broadcaster_user_id", twitchService.TwitchUserID.ToString());
+        resubEventRegistrationJson.Add("condition", conditionData);
+        transportData = new Dictionary();
+        transportData.Add("method", "websocket");
+        transportData.Add("session_id", eventSubSessionID);
+        resubEventRegistrationJson.Add("transport", transportData);
+        MakeSubRequest(resubEventRegistrationJson);
 
         Dictionary giftSubEventRegistrationJson = new Dictionary();
         giftSubEventRegistrationJson.Add("type", "channel.subscription.gift");
@@ -128,18 +145,18 @@ public partial class TwitchService_EventSub : RefCounted
         giftSubEventRegistrationJson.Add("transport", transportData);
         MakeSubRequest(giftSubEventRegistrationJson);
 
-        Dictionary resubEventRegistrationJson = new Dictionary();
-        resubEventRegistrationJson.Add("type", "channel.chat.message");
-        resubEventRegistrationJson.Add("version", "1");
+        Dictionary messageEventRegistrationJson = new Dictionary();
+        messageEventRegistrationJson.Add("type", "channel.chat.message");
+        messageEventRegistrationJson.Add("version", "1");
         conditionData = new Dictionary();
         conditionData.Add("broadcaster_user_id", twitchService.TwitchUserID.ToString());
         conditionData.Add("user_id", twitchService.TwitchUserID.ToString());
-        resubEventRegistrationJson.Add("condition", conditionData);
+        messageEventRegistrationJson.Add("condition", conditionData);
         transportData = new Dictionary();
         transportData.Add("method", "websocket");
         transportData.Add("session_id", eventSubSessionID);
-        resubEventRegistrationJson.Add("transport", transportData);
-        MakeSubRequest(resubEventRegistrationJson);
+        messageEventRegistrationJson.Add("transport", transportData);
+        MakeSubRequest(messageEventRegistrationJson);
 
         Dictionary cheerEventRegistrationJson = new Dictionary();
         cheerEventRegistrationJson.Add("type", "channel.cheer");
@@ -168,36 +185,9 @@ public partial class TwitchService_EventSub : RefCounted
 
     private void ClientEventSubHandleMessage(string type, Dictionary message)
     {
-        switch (type)
-        {
-            case "channel.update":
-                // BeepoCore.DebugLog("channel update event - " + message["title"]);
-                break;
-            case "channel.follow":
-                // BeepoCore.DebugLog("channel follow event - " + message["user_name"]);
-                twitchService.EmitSignal(TwitchService.SignalName.ChannelUserFollowed, new TwitchFollowPayload(message));
-                break;
-            case "channel.subscription.message":
-                // BeepoCore.DebugLog("channel subscribe message event - " + message["user_name"]);
-                twitchService.EmitSignal(TwitchService.SignalName.ChannelSubscriptionMessage, new TwitchSubscriptionMessagePayload(message));
-                break;
-            case "channel.subscription.gift":
-                // BeepoCore.DebugLog("channel subscribe gift event - " + message["user_name"] + " gifted " + message["total"]);
-                twitchService.EmitSignal(TwitchService.SignalName.ChannelGiftedSubs, new TwitchSubscriptionGiftPayload(message));
-                break;
-            case "channel.chat.message":
-                // BeepoCore.DebugLog("channel message event - " + message["chatter_user_name"] + " : " + message["message"].As<Dictionary>()["text"]);
-                twitchService.EmitSignal(TwitchService.SignalName.ChannelChatMessage, new TwitchChatMessagePayload(message));
-                break;
-            case "channel.cheer":
-                // BeepoCore.DebugLog("channel cheer event - " + message["user_name"] + " cheered for " + message["bits"] + " bits");
-                twitchService.EmitSignal(TwitchService.SignalName.ChannelCheer, new TwitchCheerPayload(message));
-                break;
-            case "channel.channel_points_custom_reward_redemption.add":
-                // BeepoCore.DebugLog("channel redeem event - " + message["user_name"] + " redeemed " + message["reward"].As<Dictionary>()["title"]);
-                twitchService.EmitSignal(TwitchService.SignalName.ChannelPointsRedeem, new TwitchRedeemPayload(message));
-                break;
-        }
+
+        var newEvent = TwitchEvent.BuildStreamEvent(type, message);
+        BeepoCore.GetInstance().SendEvent(newEvent);
     }
 
     private void ClientEventSubHandleDataReceived()

@@ -15,7 +15,7 @@ public partial class TwitchService : Node
     ///  Client ID for the twitch application. Found here:
     ///  https://dev.twitch.tv/console/apps
     /// </summary>
-    [Export] public string twitchClientID = "";
+    [Export] public string twitchClientID = "65016wodmk6fldrrscoq0amo6pbkgv";
 
     /// <summary>
     /// NOTE: Whatever setting you put here will be clobbered by whatever is in the

@@ -64,7 +64,7 @@ public partial class BeepoCore : Node
         return true;
     }
 
-    public void SendEventLookup(BeepoEvent beepoEvent)
+    public void SendEvent(BeepoEvent beepoEvent)
     {
         GD.Print("Sending event in event domain ", beepoEvent.EventDomainID);
         EventDomainNode eventDomain;
