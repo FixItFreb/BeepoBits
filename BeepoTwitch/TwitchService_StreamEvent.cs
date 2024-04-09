@@ -50,6 +50,7 @@ public class TwitchEvent
         break;
       case "channel.chat.message":
         newEvent.type = "message";
+        newEvent.data["user_name"] = payload["chatter_user_name"].As<string>();
         newEvent.data["message"] = payload["message"].As<Dictionary>()["text"].As<string>();
         newEvent.data["decorators"] = ParseMessageDecorators(payload);
         break;

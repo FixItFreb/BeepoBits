@@ -2,5 +2,5 @@ using System;
 using Godot;
 public interface IBeepoListener
 {
-  void Notify(BeepoEvent beepoEvent) { }
+  void Notify(BeepoEvent beepoEvent);
 }

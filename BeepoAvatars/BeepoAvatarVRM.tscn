@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dd0b8pdwisqf0"]
 
-[ext_resource type="PackedScene" uid="uid://i33olrb0q1r3" path="res://Modules/Avatars/BeepoAvatar.tscn" id="1_7jive"]
-[ext_resource type="Script" path="res://Modules/Avatars/BeepoAvatarVRM.cs" id="2_pf20k"]
+[ext_resource type="PackedScene" uid="uid://i33olrb0q1r3" path="res://addons/BeepoAvatars/BeepoAvatar.tscn" id="1_7jive"]
+[ext_resource type="Script" path="res://addons/BeepoAvatars/BeepoAvatarVRM.cs" id="2_pf20k"]
 
 [node name="BeepoAvatarRoot" instance=ExtResource("1_7jive")]
 

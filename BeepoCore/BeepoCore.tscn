@@ -1,14 +1,14 @@
 [gd_scene load_steps=4 format=3 uid="uid://ct8qu0j3b5uoa"]
 
-[ext_resource type="Script" path="res://addons/BeepoBits/BeepoCore.cs" id="1_ltca3"]
-[ext_resource type="Script" path="res://addons/BeepoBits/BeepoAudio.cs" id="3_47s4i"]
-[ext_resource type="Script" path="res://addons/BeepoBits/Events/EventDomainNode.cs" id="4_7u5ss"]
+[ext_resource type="Script" path="res://addons/BeepoCore/BeepoCore.cs" id="1_5u878"]
+[ext_resource type="Script" path="res://addons/BeepoCore/BeepoAudio.cs" id="2_lqor3"]
+[ext_resource type="Script" path="res://addons/BeepoCore/Events/EventDomainNode.cs" id="3_22op0"]
 
 [node name="BeepoCore" type="Node"]
-script = ExtResource("1_ltca3")
+script = ExtResource("1_5u878")
 
 [node name="BeepoAudio" type="Node" parent="." node_paths=PackedStringArray("audioPlayer")]
-script = ExtResource("3_47s4i")
+script = ExtResource("2_lqor3")
 audioPlayer = NodePath("AudioStreamPlayer")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="BeepoAudio"]
@@ -30,5 +30,5 @@ middle_mouse_paste_enabled = false
 wrap_mode = 1
 
 [node name="EventDomainNode" type="Node" parent="."]
-script = ExtResource("4_7u5ss")
+script = ExtResource("3_22op0")
 EventDomainID = &"StreamEvents"
