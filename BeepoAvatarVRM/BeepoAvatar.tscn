@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://i33olrb0q1r3"]
+
+[ext_resource type="Script" path="res://addons/BeepoCore/BeepoAvatar.cs" id="1_a8c3y"]
+
+[node name="BeepoAvatar" type="Node3D" node_paths=PackedStringArray("headPostion")]
+script = ExtResource("1_a8c3y")
+headPostion = NodePath("HeadPosition")
+
+[node name="HeadPosition" type="Node3D" parent="."]
