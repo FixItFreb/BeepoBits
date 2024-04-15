@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://eo71cx74cl5p"]
-
-[ext_resource type="Script" path="res://addons/BeepoFeatures/Props/PropsManager.cs" id="1_5khqm"]
-
-[node name="PropsManager" type="Node"]
-script = ExtResource("1_5khqm")
-
-[node name="Props" type="Node" parent="."]

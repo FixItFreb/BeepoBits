@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://cu652m3lxm6pr"]
-
-[ext_resource type="Script" path="res://addons/BeepoFeatures/Trails/TrailsManager.cs" id="1_g3d88"]
-
-[node name="TrailsManager" type="Node"]
-script = ExtResource("1_g3d88")
