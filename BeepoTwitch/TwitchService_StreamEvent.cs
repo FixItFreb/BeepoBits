@@ -147,7 +147,7 @@ public class TwitchEvent
         decorators.Add(decorator);
       }
 
-      if (fragment_type == "emote")
+      if (fragment_type == "cheermote")
       {
         Dictionary decorator = new();
 
