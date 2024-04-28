@@ -97,7 +97,7 @@ public partial class TwitchService_EventSub : RefCounted
 
         Dictionary raidEventRegistrationJson = new Dictionary();
         raidEventRegistrationJson.Add("type", "channel.raid");
-        raidEventRegistrationJson.Add("version", "2");
+        raidEventRegistrationJson.Add("version", "1");
         conditionData = new Dictionary();
         conditionData.Add("broadcaster_user_id", twitchService.TwitchUserID.ToString());
         conditionData.Add("moderator_user_id", twitchService.TwitchUserID.ToString());
