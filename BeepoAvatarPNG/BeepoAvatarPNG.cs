@@ -7,8 +7,6 @@ using System.Collections.Generic;
 [GlobalClass]
 public partial class BeepoAvatarPNG : RigidBody3D
 {
-    [Export] private BeepoAvatar avatar;
-    public BeepoAvatar Avatar { get { return avatar; } }
     private Array<PNGBone> bones;
     private SpeechState currentSpeech = SpeechState.NotSpeaking;
 

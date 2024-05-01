@@ -1,9 +1,9 @@
 ﻿using Godot;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace uOSC
 {
-
     public partial class uOscServer : Node
     {
         [Export] public int port = 3333;
@@ -30,6 +30,12 @@ namespace uOSC
         int port_ = 0;
         bool isStarted_ = false;
 
+        private uint boneTrackingAddress = "/VMC/Ext/Bone/Pos".Hash();
+        private uint blendTrackingAddress = "/VMC/Ext/Blend/Val".Hash();
+        private uint blendApplyAddress = "/VMC/Ext/Blend/Apply".Hash();
+
+        private List<BlendShapeTrackingData> blendShapesToApply = new List<BlendShapeTrackingData>();
+
         public bool isRunning
         {
             get { return udp_.isRunning; }
@@ -42,7 +48,7 @@ namespace uOSC
 
         public override void _Ready()
         {
-            if(autoStart)
+            if (autoStart)
             {
                 StartServer();
             }
@@ -86,7 +92,36 @@ namespace uOSC
             while (parser_.messageCount > 0)
             {
                 var message = parser_.Dequeue();
-                EmitSignal(uOscServer.SignalName.OnDataReceived, new MessageObject(message));
+
+                uint addressHash = message.address.Hash();
+                object[] values = message.values;
+
+                if (addressHash == boneTrackingAddress)
+                {
+                    BoneTrackingEvent boneEvent = new BoneTrackingEvent();
+                    boneEvent.EventDomainID = "TrackingEvents";
+                    boneEvent.name = (string)values[0];
+                    boneEvent.rot = new Quaternion((float)values[4], -(float)values[5], -(float)values[6], (float)values[7]).Normalized();
+
+                    BeepoCore.GetInstance().SendEvent(boneEvent);
+                }
+                else if (addressHash == blendTrackingAddress)
+                {
+                    BlendShapeTrackingData blendShapeData = new BlendShapeTrackingData();
+                    string animName = (string)values[0];
+                    blendShapeData.value = (float)values[1];
+                    blendShapeData.hash = animName.Hash();
+                    blendShapesToApply.Add(blendShapeData);
+                }
+                else if (addressHash == blendApplyAddress)
+                {
+                    var blendShapeEvent = new BlendShapeTrackingEvent();
+                    blendShapeEvent.EventDomainID = "TrackingEvents";
+                    blendShapeEvent.data = blendShapesToApply;
+
+                    // Clear all blend shape data ready for next update
+                    blendShapesToApply = new List<BlendShapeTrackingData>();
+                }
             }
         }
 

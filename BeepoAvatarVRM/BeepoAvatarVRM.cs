@@ -1,11 +1,8 @@
 using Godot;
 using System.Collections.Generic;
 
-public partial class BeepoAvatarVRM : Node3D
+public partial class BeepoAvatarVRM : Node3D, IBeepoListener
 {
-    [Export] private BeepoAvatar avatar;
-    public BeepoAvatar Avatar { get { return avatar; } }
-
     [Export] private Skeleton3D skeleton;
     public Skeleton3D Skeleton { get { return skeleton; } }
 
@@ -36,9 +33,9 @@ public partial class BeepoAvatarVRM : Node3D
     public override void _Ready()
     {
         // Find our VRM object
-        foreach(Node n in GetChildren())
+        foreach (Node n in GetChildren())
         {
-            if(n.IsClass("VRMTopLevel"))
+            if (n.IsClass("VRMTopLevel"))
             {
                 vrmObject = n;
                 break;
@@ -56,7 +53,7 @@ public partial class BeepoAvatarVRM : Node3D
                     break;
                 }
             }
-            if(vrmObject.Get("vrm_meta").AsGodotObject().Get("humanoid_bone_mapping").AsGodotObject() is BoneMap boneMap)
+            if (vrmObject.Get("vrm_meta").AsGodotObject().Get("humanoid_bone_mapping").AsGodotObject() is BoneMap boneMap)
             {
                 GD.Print("Here have all the bones are!");
                 vrmBoneMap = boneMap;
@@ -114,6 +111,49 @@ public partial class BeepoAvatarVRM : Node3D
                         {
                             // Create a new entry and add the current blend shape index.
                             blendshapes.Add(animNameHash, new List<int>() { blendShapeIndex });
+                        }
+                    }
+                }
+            }
+        }
+
+        BeepoCore.GetInstance().RegisterEventListener("TrackingEvents", this);
+    }
+
+    public void Notify(BeepoEvent beepoEvent)
+    {
+        if (beepoEvent is BoneTrackingEvent boneEvent)
+        {
+
+            int boneIndex = Skeleton.FindBone(boneEvent.name);
+            if (boneIndex > -1)
+            {
+                Transform3D newTransform =
+                    Skeleton.GetBoneRest(boneIndex) *
+                    new Transform3D(Skeleton.GetBoneGlobalRest(boneIndex).Basis, Vector3.Zero).Inverse() *
+                    new Transform3D(new Basis(boneEvent.rot), Vector3.Zero) *
+                    new Transform3D(Skeleton.GetBoneGlobalRest(boneIndex).Basis, Vector3.Zero);
+
+                Skeleton.SetBonePoseRotation(boneIndex, newTransform.Basis.GetRotationQuaternion());
+            }
+        }
+
+        if (beepoEvent is BlendShapeTrackingEvent blendShapeEvent)
+        {
+            foreach (BlendShapeTrackingData b in blendShapeEvent.data)
+            {
+                foreach (MeshInstance3D m in MeshBlendShapes.Keys)
+                {
+                    foreach (Dictionary<uint, List<int>> blendshape in MeshBlendShapes.Values)
+                    {
+                        List<int> blendShapeIndexes;
+                        if (blendshape.ContainsKey(b.hash))
+                        {
+                            blendShapeIndexes = blendshape[b.hash];
+                            for (int i = 0; i < blendShapeIndexes.Count; i++)
+                            {
+                                m.SetBlendShapeValue(blendShapeIndexes[i], b.value);
+                            }
                         }
                     }
                 }

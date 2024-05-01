@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://cw7hlnwf2djxi"]
+
+[ext_resource type="Script" path="res://addons/BeepoTracking/uOscServer.cs" id="1_06rw8"]
+
+[node name="BeepoTracking" type="Node"]
+script = ExtResource("1_06rw8")
+port = 39539

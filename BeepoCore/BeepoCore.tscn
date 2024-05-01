@@ -30,6 +30,10 @@ virtual_keyboard_enabled = false
 middle_mouse_paste_enabled = false
 wrap_mode = 1
 
-[node name="EventDomainNode" type="Node" parent="."]
+[node name="StreamEventsDomain" type="Node" parent="."]
 script = ExtResource("3_22op0")
 EventDomainID = &"StreamEvents"
+
+[node name="TrackingEventsDomain" type="Node" parent="."]
+script = ExtResource("3_22op0")
+EventDomainID = &"TrackingEvents"

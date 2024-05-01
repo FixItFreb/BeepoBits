@@ -7,17 +7,7 @@ public partial class BeepoCore : Node
 {
     [Export] public char commandPrefix = '!';
 
-    public static List<BeepoAvatar> currentAvatars = new List<BeepoAvatar>();
-
-    private static Node3D avatarAnchor;
-    public static Node3D AvatarAnchor { get { return avatarAnchor; } }
-    private static Node3D worldRoot;
-    public static Node3D WorldRoot { get { return worldRoot; } }
-
     public GDC.Dictionary<StringName, EventDomainNode> eventDomains = new();
-
-    [Signal] public delegate void NewAvatarRegisteredEventHandler(BeepoAvatar newAvatar);
-    [Signal] public delegate void AvatarUnregisteredEventHandler(BeepoAvatar avatar);
     [Signal] public delegate void OnDebugLogEventHandler(string debugString);
 
     public Camera3D CurrentCamera { get { return GetViewport().GetCamera3D(); } }
@@ -28,10 +18,6 @@ public partial class BeepoCore : Node
 
     public override void _Ready()
     {
-
-        // TODO: This needs to be less hardcoded
-        // worldRoot = GetNode<Node3D>("../World");
-        // avatarAnchor = GetNode<Node3D>("../World/AvatarAnchor");
 
     }
 
@@ -76,26 +62,6 @@ public partial class BeepoCore : Node
 
         eventDomain.NotifyListeners(beepoEvent);
 
-    }
-
-    public void RegisterNewAvatar(BeepoAvatar newAvatar)
-    {
-        if (currentAvatars.Contains(newAvatar))
-        {
-            return;
-        }
-
-        currentAvatars.Add(newAvatar);
-        EmitSignal(BeepoCore.SignalName.NewAvatarRegistered, newAvatar);
-    }
-
-    public void UnregisterAvatar(BeepoAvatar avatar)
-    {
-        if (currentAvatars.Contains(avatar))
-        {
-            currentAvatars.Remove(avatar);
-            EmitSignal(BeepoCore.SignalName.AvatarUnregistered, avatar);
-        }
     }
 
     public void DebugLog(string debugText)

@@ -36,31 +36,31 @@ public partial class SimpleInput : Node
 
     public override void _Input(InputEvent inputEvent)
     {
-        if (inputEvent.TryCast(out InputEventMouseMotion motion))
-        {
-            mouseRelative = motion.Relative;
-            if (Input.IsActionPressed(CamMouseLookAction))
-            {
-                if (shiftHeld)
-                {
-                    BeepoCore.AvatarAnchor.RotateY(mouseRelative.X * mouseInputScale);
-                }
-                else if (controlHeld)
-                {
-                    BeepoCore.AvatarAnchor.RotateX(mouseRelative.Y * mouseInputScale);
-                }
-                else
-                {
-                    controlledCamera.RotateY(-mouseRelative.X * mouseInputScale);
-                    controlledCamera.RotateX(-mouseRelative.Y * mouseInputScale);
-                    controlledCamera.Rotation = controlledCamera.Rotation.WithX(Mathf.Clamp(controlledCamera.Rotation.X, maxCamX.X, maxCamX.Y)).WithZ(0);
-                }
-            }
-            else if (Input.IsActionPressed(AvatarMoveModifierAction))
-            {
-                BeepoCore.AvatarAnchor.Translate(new Vector3(mouseRelative.X * mouseInputScale, -mouseRelative.Y * mouseInputScale, 0));
-            }
-        }
+        // if (inputEvent.TryCast(out InputEventMouseMotion motion))
+        // {
+        //     mouseRelative = motion.Relative;
+        //     if (Input.IsActionPressed(CamMouseLookAction))
+        //     {
+        //         if (shiftHeld)
+        //         {
+        //             BeepoCore.AvatarAnchor.RotateY(mouseRelative.X * mouseInputScale);
+        //         }
+        //         else if (controlHeld)
+        //         {
+        //             BeepoCore.AvatarAnchor.RotateX(mouseRelative.Y * mouseInputScale);
+        //         }
+        //         else
+        //         {
+        //             controlledCamera.RotateY(-mouseRelative.X * mouseInputScale);
+        //             controlledCamera.RotateX(-mouseRelative.Y * mouseInputScale);
+        //             controlledCamera.Rotation = controlledCamera.Rotation.WithX(Mathf.Clamp(controlledCamera.Rotation.X, maxCamX.X, maxCamX.Y)).WithZ(0);
+        //         }
+        //     }
+        //     else if (Input.IsActionPressed(AvatarMoveModifierAction))
+        //     {
+        //         BeepoCore.AvatarAnchor.Translate(new Vector3(mouseRelative.X * mouseInputScale, -mouseRelative.Y * mouseInputScale, 0));
+        //     }
+        // }
 
         if (inputEvent.IsActionPressed(CamResetAction))
         {
