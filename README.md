@@ -14,7 +14,8 @@ The addons availble in the tookit are:
 
 # Installation
 1. Download the addons of interest to you and put them into the `addons` folder in your godot project. 
-2. Enable the BeepoBits and any Addon you're using in the `project settings -> plugins` configuration.
+2. Build the project once.
+3. Enable BeepoCore and any Addon you're using in the `project settings -> plugins` configuration.
 
 # Troubleshooting
 Having trouble using BeepoBits? Checkout the [troubleshooting](https://github.com/FixItFreb/BeepoBits/wiki/Troubleshooting) page on the wiki.
