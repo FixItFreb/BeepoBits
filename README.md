@@ -12,6 +12,8 @@ The addons availble in the tookit are:
  - Godot .NET v4.2+
  - BeepoCore is required for all addons to work.
 
+ For BeepoAvatarVRM you will also need the [VRM and Godot-MToon-Shader addons.](https://github.com/V-Sekai/godot-vrm)
+
 # Installation
 1. Download the addons of interest to you and put them into the `addons` folder in your godot project. 
 2. Build the project once.
