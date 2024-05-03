@@ -1,7 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-public partial class GizmoHelper : GodotObject
+public partial class GizmoHelper
 {
   private Variant initialValue;
   private Transform3D initialTransform;

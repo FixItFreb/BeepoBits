@@ -28,7 +28,7 @@ public partial class BeepoCore : Node
 
     public bool RegisterEventDomain(EventDomainNode newDomain)
     {
-        GD.Print("Registered event domain ", newDomain.EventDomainID);
+        // GD.Print("Registered event domain ", newDomain.EventDomainID);
         if (!eventDomains.ContainsKey(newDomain.EventDomainID))
         {
             eventDomains.Add(newDomain.EventDomainID, newDomain);
@@ -39,7 +39,7 @@ public partial class BeepoCore : Node
 
     public bool RegisterEventListener(StringName eventDomainID, IBeepoListener newListener)
     {
-        GD.Print("Registered new listener in event domain ", eventDomainID);
+        // GD.Print("Registered new listener in event domain ", eventDomainID);
         EventDomainNode eventDomain;
         if (!eventDomains.TryGetValue(eventDomainID, out eventDomain))
         {
@@ -52,7 +52,7 @@ public partial class BeepoCore : Node
 
     public void SendEvent(BeepoEvent beepoEvent)
     {
-        GD.Print("Sending event in event domain ", beepoEvent.EventDomainID);
+        // GD.Print("Sending event in event domain ", beepoEvent.EventDomainID);
         EventDomainNode eventDomain;
         if (!eventDomains.TryGetValue(beepoEvent.EventDomainID, out eventDomain))
         {

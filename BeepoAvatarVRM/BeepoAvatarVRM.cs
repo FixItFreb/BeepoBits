@@ -1,12 +1,13 @@
 using Godot;
 using System.Collections.Generic;
 
+[GlobalClass]
 public partial class BeepoAvatarVRM : Node3D, IBeepoListener
 {
-    [Export] private Skeleton3D skeleton;
+    private Skeleton3D skeleton;
     public Skeleton3D Skeleton { get { return skeleton; } }
 
-    [Export] private AnimationPlayer animPlayer;
+    private AnimationPlayer animPlayer;
     public AnimationPlayer AnimPlayer { get { return animPlayer; } }
 
     private BoneMap vrmBoneMap;
@@ -35,7 +36,7 @@ public partial class BeepoAvatarVRM : Node3D, IBeepoListener
         // Find our VRM object
         foreach (Node n in GetChildren())
         {
-            if (n.IsClass("VRMTopLevel"))
+            if (IsCustomClass(n, "VRMTopLevel"))
             {
                 vrmObject = n;
                 break;
@@ -47,20 +48,29 @@ public partial class BeepoAvatarVRM : Node3D, IBeepoListener
         {
             foreach (Node n in vrmObject.GetChildren())
             {
-                if (n.IsClass("VRMSecondary"))
+                if (IsCustomClass(n, "VRMSecondary"))
                 {
-                    vrmSecondary = n;
-                    break;
+                    vrmSecondary ??= n;
+                }
+
+                if (n is Skeleton3D skelly)
+                {
+                    skeleton ??= skelly;
+                }
+
+                if (n is AnimationPlayer anim)
+                {
+                    animPlayer ??= anim;
                 }
             }
             if (vrmObject.Get("vrm_meta").AsGodotObject().Get("humanoid_bone_mapping").AsGodotObject() is BoneMap boneMap)
             {
-                GD.Print("Here have all the bones are!");
+                // GD.Print("Here have all the bones are!");
                 vrmBoneMap = boneMap;
             }
             else
             {
-                GD.Print("Where have all the bones go?");
+                // GD.Print("Where have all the bones go?");
             }
 
             version = vrmObject.Get("vrm_meta").AsGodotObject().Get("spec_version").AsString();
@@ -159,5 +169,25 @@ public partial class BeepoAvatarVRM : Node3D, IBeepoListener
                 }
             }
         }
+    }
+
+    private bool IsCustomClass(Node node, string className)
+    {
+        if (node.GetScript().VariantType == Variant.Type.Nil)
+        {
+            return false;
+        }
+
+        var scriptPath = node.GetScript().As<Script>().ResourcePath;
+
+        var classes = ProjectSettings.GetGlobalClassList();
+        foreach (var currentClass in classes)
+        {
+            if (scriptPath.Equals(currentClass["path"].As<string>()) && className == currentClass["class"].As<string>())
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
