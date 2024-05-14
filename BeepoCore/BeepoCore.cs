@@ -50,13 +50,13 @@ public partial class BeepoCore : Node
         return true;
     }
 
-    public void SendEvent(BeepoEvent beepoEvent)
+    public void SendEvent(BeepoEvent beepoEvent, StringName eventDomainID)
     {
         // GD.Print("Sending event in event domain ", beepoEvent.EventDomainID);
         EventDomainNode eventDomain;
-        if (!eventDomains.TryGetValue(beepoEvent.EventDomainID, out eventDomain))
+        if (!eventDomains.TryGetValue(eventDomainID, out eventDomain))
         {
-            GD.PrintErr("Tried sending event to domain ", beepoEvent.EventDomainID, " but no such domain exists.");
+            GD.PrintErr("Tried sending event to domain ", eventDomainID, " but no such domain exists.");
             return;
         }
 

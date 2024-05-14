@@ -290,7 +290,7 @@ public partial class TwitchService : Node
         twitchServiceUsers.Init(this);
         twitchServiceOAuth.Init(this);
         //twitchServicePubSub.Init(this);
-        //twitchServiceIRC.Init(this);
+        twitchServiceIRC.Init(this);
         twitchServiceEventSub.Init(this);
         twitchServiceEmotes.Init(this);
     }
@@ -309,7 +309,7 @@ public partial class TwitchService : Node
         //twitchServicePubSub.ClientPubSubUpdate(delta);
 
         // Update IRC
-        //twitchServiceIRC.ClientIRCUpdate(delta);
+        twitchServiceIRC.ClientIRCUpdate(delta);
 
         // Update EventSub
         twitchServiceEventSub.ClientEventSubUpdate(delta);

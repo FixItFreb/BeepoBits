@@ -99,11 +99,10 @@ namespace uOSC
                 if (addressHash == boneTrackingAddress)
                 {
                     BoneTrackingEvent boneEvent = new BoneTrackingEvent();
-                    boneEvent.EventDomainID = "TrackingEvents";
                     boneEvent.name = (string)values[0];
                     boneEvent.rot = new Quaternion((float)values[4], -(float)values[5], -(float)values[6], (float)values[7]).Normalized();
 
-                    BeepoCore.GetInstance().SendEvent(boneEvent);
+                    BeepoCore.GetInstance().SendEvent(boneEvent, "TrackingEvents");
                 }
                 else if (addressHash == blendTrackingAddress)
                 {
@@ -116,8 +115,8 @@ namespace uOSC
                 else if (addressHash == blendApplyAddress)
                 {
                     var blendShapeEvent = new BlendShapeTrackingEvent();
-                    blendShapeEvent.EventDomainID = "TrackingEvents";
                     blendShapeEvent.data = blendShapesToApply;
+                    BeepoCore.GetInstance().SendEvent(blendShapeEvent, "TrackingEvents");
 
                     // Clear all blend shape data ready for next update
                     blendShapesToApply = new List<BlendShapeTrackingData>();

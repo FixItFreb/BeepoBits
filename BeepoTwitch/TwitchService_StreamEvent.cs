@@ -5,72 +5,61 @@ using Godot.Collections;
 
 public class TwitchEvent
 {
-  public static StreamEvent BuildStreamEvent(string eventType, Dictionary payload)
+  public static BeepoEvent BuildStreamEvent(string eventType, Dictionary payload)
   {
-    StreamEvent newEvent = new()
-    {
-      EventDomainID = "StreamEvents",
-      data = new(),
-    };
-
+    GD.Print("Got: " + payload);
+    BeepoEvent newEvent = new();
     switch (eventType)
     {
       case "channel.follow":
-        newEvent.type = "follow";
-        newEvent.data["user_name"] = payload["user_name"].As<string>();
-        newEvent.data["decorators"] = new Array<Dictionary>();
+        FollowEvent followEvent = new();
+        followEvent.user_name = payload["user_name"].As<string>();
+        newEvent = followEvent;
         break;
       case "channel.subscribe":
-        newEvent.type = "subscription";
-        newEvent.data["user_name"] = payload["user_name"].As<string>();
-        newEvent.data["is_gift"] = payload["is_gift"].As<bool>();
-        newEvent.data["decorators"] = new Array<Dictionary>();
+        SubscriptionEvent subscriptionEvent = new();
+        subscriptionEvent.user_name = payload["user_name"].As<string>();
+        subscriptionEvent.is_gift = payload["is_gift"].As<bool>();
+        newEvent = subscriptionEvent;
         break;
       case "channel.subscription.message":
-        newEvent.type = "subscription";
-        newEvent.data["user_name"] = payload["user_name"].As<string>();
-        newEvent.data["is_gift"] = false;
-        newEvent.data["decorators"] = ParseSubMessageDecorators(payload["message"].As<Dictionary>());
+        SubscriptionEvent resubEvent = new();
+        resubEvent.user_name = payload["user_name"].As<string>();
+        resubEvent.is_gift = false;
+        newEvent = resubEvent;
         break;
       case "channel.subscription.gift":
-        newEvent.type = "donation";
-        newEvent.data["user_name"] = payload["user_name"].As<string>();
-        newEvent.data["total"] = payload["total"].As<int>();
-        newEvent.data["message"] = "";
-        newEvent.data["is_anonymous"] = payload["is_anonymous"].As<bool>();
-        newEvent.data["decorators"] = ParseGiftSubDecorators(payload);
+        DonationEvent giftSubs = new();
+        giftSubs.type = "subscription";
+        giftSubs.user_name = payload["user_name"].As<string>();
+        giftSubs.total = payload["total"].As<int>();
+        giftSubs.message = "";
+        giftSubs.is_anonymous = payload["is_anonymous"].As<bool>();
+        newEvent = giftSubs;
         break;
       case "channel.cheer":
-        newEvent.type = "donation";
-        newEvent.data["user_name"] = payload["user_name"].As<string>();
-        newEvent.data["total"] = payload["bits"].As<int>();
-        newEvent.data["message"] = payload["message"].As<string>();
-        newEvent.data["is_anonymous"] = payload["is_anonymous"].As<bool>();
-        newEvent.data["decorators"] = ParseCheerDecorators(payload);
-        break;
-      case "channel.chat.message":
-        newEvent.type = "message";
-        newEvent.data["user_name"] = payload["chatter_user_name"].As<string>();
-        newEvent.data["message"] = payload["message"].As<Dictionary>()["text"].As<string>();
-        newEvent.data["decorators"] = ParseMessageDecorators(payload);
+        DonationEvent cheerEvent = new();
+        cheerEvent.type = "cheer";
+        cheerEvent.user_name = payload["user_name"].As<string>();
+        cheerEvent.total = payload["bits"].As<int>();
+        cheerEvent.message = payload["message"].As<string>();
+        cheerEvent.is_anonymous = payload["is_anonymous"].As<bool>();
+        newEvent = cheerEvent;
         break;
       case "channel.channel_points_custom_reward_redemption.add":
-        newEvent.type = "redeem";
-        newEvent.data["user_name"] = payload["user_name"].As<string>();
-        newEvent.data["title"] = payload["reward"].As<Dictionary>()["title"].As<string>();
-        newEvent.data["user_input"] = payload["user_input"].As<string>();
-        newEvent.data["decorators"] = new Array<Dictionary>();
+        RedeemEvent redeemEvent = new();
+        redeemEvent.user_name = payload["user_name"].As<string>();
+        redeemEvent.title = payload["reward"].As<Dictionary>()["title"].As<string>();
+        redeemEvent.input = payload["user_input"].As<string>();
+        newEvent = redeemEvent;
         break;
       case "channel.raid":
-        newEvent.type = "raid";
-        newEvent.data["user_name"] = payload["from_broadcaster_user_name"].As<string>();
-        newEvent.data["viewers"] = payload["viewers"].As<int>();
-        newEvent.data["decorators"] = new Array<Dictionary>();
+        RaidEvent raidEvent = new();
+        raidEvent.user_name = payload["from_broadcaster_user_name"].As<string>();
+        raidEvent.viewers = payload["viewers"].As<int>();
+        newEvent = raidEvent;
         break;
     }
-
-    GD.Print("Got: " + payload);
-    GD.Print("Event: " + newEvent.data);
 
     return newEvent;
   }

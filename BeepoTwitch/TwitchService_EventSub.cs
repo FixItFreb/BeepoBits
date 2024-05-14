@@ -145,18 +145,18 @@ public partial class TwitchService_EventSub : RefCounted
         giftSubEventRegistrationJson.Add("transport", transportData);
         MakeSubRequest(giftSubEventRegistrationJson);
 
-        Dictionary messageEventRegistrationJson = new Dictionary();
-        messageEventRegistrationJson.Add("type", "channel.chat.message");
-        messageEventRegistrationJson.Add("version", "1");
-        conditionData = new Dictionary();
-        conditionData.Add("broadcaster_user_id", twitchService.TwitchUserID.ToString());
-        conditionData.Add("user_id", twitchService.TwitchUserID.ToString());
-        messageEventRegistrationJson.Add("condition", conditionData);
-        transportData = new Dictionary();
-        transportData.Add("method", "websocket");
-        transportData.Add("session_id", eventSubSessionID);
-        messageEventRegistrationJson.Add("transport", transportData);
-        MakeSubRequest(messageEventRegistrationJson);
+        // Dictionary messageEventRegistrationJson = new Dictionary();
+        // messageEventRegistrationJson.Add("type", "channel.chat.message");
+        // messageEventRegistrationJson.Add("version", "1");
+        // conditionData = new Dictionary();
+        // conditionData.Add("broadcaster_user_id", twitchService.TwitchUserID.ToString());
+        // conditionData.Add("user_id", twitchService.TwitchUserID.ToString());
+        // messageEventRegistrationJson.Add("condition", conditionData);
+        // transportData = new Dictionary();
+        // transportData.Add("method", "websocket");
+        // transportData.Add("session_id", eventSubSessionID);
+        // messageEventRegistrationJson.Add("transport", transportData);
+        // MakeSubRequest(messageEventRegistrationJson);
 
         Dictionary cheerEventRegistrationJson = new Dictionary();
         cheerEventRegistrationJson.Add("type", "channel.cheer");
@@ -187,7 +187,7 @@ public partial class TwitchService_EventSub : RefCounted
     {
 
         var newEvent = TwitchEvent.BuildStreamEvent(type, message);
-        BeepoCore.GetInstance().SendEvent(newEvent);
+        BeepoCore.GetInstance().SendEvent(newEvent, "StreamEvents");
     }
 
     private void ClientEventSubHandleDataReceived()
