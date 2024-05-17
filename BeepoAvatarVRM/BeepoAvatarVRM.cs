@@ -82,7 +82,7 @@ public partial class BeepoAvatarVRM : Node3D, IBeepoListener
         {
             Animation anim = animPlayer.GetAnimation(animList[i]);
             int trackCount = anim.GetTrackCount();
-            uint animNameHash = animList[i].Hash();
+            uint animNameHash = animList[i].ToLower().Hash();
             for (int j = 0; j < trackCount; j++)
             {
                 // Split the anim track path into the anim root node and the blend shape key name.

@@ -1,6 +1,7 @@
 ﻿using Godot;
 using System.Threading;
 using System.Collections.Generic;
+using Godot.Collections;
 
 namespace uOSC
 {
@@ -29,7 +30,7 @@ namespace uOSC
 
         int port_ = 0;
         bool isStarted_ = false;
-
+        private Godot.Collections.Dictionary<string, string> blendshapeTranslation = new();
         private uint boneTrackingAddress = "/VMC/Ext/Bone/Pos".Hash();
         private uint blendTrackingAddress = "/VMC/Ext/Blend/Val".Hash();
         private uint blendApplyAddress = "/VMC/Ext/Blend/Apply".Hash();
@@ -52,6 +53,16 @@ namespace uOSC
             {
                 StartServer();
             }
+            blendshapeTranslation.Add("joy", "happy");
+            blendshapeTranslation.Add("sorrow", "sad");
+            blendshapeTranslation.Add("fun", "relaxed");
+            blendshapeTranslation.Add("a", "aa");
+            blendshapeTranslation.Add("i", "ih");
+            blendshapeTranslation.Add("u", "ou");
+            blendshapeTranslation.Add("e", "ee");
+            blendshapeTranslation.Add("o", "oh");
+            blendshapeTranslation.Add("blink_l", "blinkleft");
+            blendshapeTranslation.Add("blink_r", "blinkright");
         }
 
         public void StartServer()
@@ -107,7 +118,13 @@ namespace uOSC
                 else if (addressHash == blendTrackingAddress)
                 {
                     BlendShapeTrackingData blendShapeData = new BlendShapeTrackingData();
-                    string animName = (string)values[0];
+                    string animName = ((string)values[0]).ToLower();
+
+                    if (blendshapeTranslation.ContainsKey(animName))
+                    {
+                        animName = blendshapeTranslation[animName];
+                    }
+
                     blendShapeData.value = (float)values[1];
                     blendShapeData.hash = animName.Hash();
                     blendShapesToApply.Add(blendShapeData);
