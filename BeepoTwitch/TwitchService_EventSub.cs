@@ -75,6 +75,11 @@ public partial class TwitchService_EventSub : RefCounted
         };
 
         Error err = twitchSubFetchHttpClient.Request(TwitchSubEndpoint, headerParams, HttpClient.Method.Post, Json.Stringify(jsonData));
+
+        if (err != Error.Ok)
+        {
+            GD.PrintErr("Failed to subscribe to twitch event [" + jsonData["type"] + "], reason: " + err);
+        }
     }
 
     private void ClientEventSubHandleConnectionEstablished(int peerID)
@@ -145,18 +150,18 @@ public partial class TwitchService_EventSub : RefCounted
         giftSubEventRegistrationJson.Add("transport", transportData);
         MakeSubRequest(giftSubEventRegistrationJson);
 
-        // Dictionary messageEventRegistrationJson = new Dictionary();
-        // messageEventRegistrationJson.Add("type", "channel.chat.message");
-        // messageEventRegistrationJson.Add("version", "1");
-        // conditionData = new Dictionary();
-        // conditionData.Add("broadcaster_user_id", twitchService.TwitchUserID.ToString());
-        // conditionData.Add("user_id", twitchService.TwitchUserID.ToString());
-        // messageEventRegistrationJson.Add("condition", conditionData);
-        // transportData = new Dictionary();
-        // transportData.Add("method", "websocket");
-        // transportData.Add("session_id", eventSubSessionID);
-        // messageEventRegistrationJson.Add("transport", transportData);
-        // MakeSubRequest(messageEventRegistrationJson);
+        Dictionary messageEventRegistrationJson = new Dictionary();
+        messageEventRegistrationJson.Add("type", "channel.chat.message");
+        messageEventRegistrationJson.Add("version", "1");
+        conditionData = new Dictionary();
+        conditionData.Add("broadcaster_user_id", twitchService.TwitchUserID.ToString());
+        conditionData.Add("user_id", twitchService.TwitchUserID.ToString());
+        messageEventRegistrationJson.Add("condition", conditionData);
+        transportData = new Dictionary();
+        transportData.Add("method", "websocket");
+        transportData.Add("session_id", eventSubSessionID);
+        messageEventRegistrationJson.Add("transport", transportData);
+        MakeSubRequest(messageEventRegistrationJson);
 
         Dictionary cheerEventRegistrationJson = new Dictionary();
         cheerEventRegistrationJson.Add("type", "channel.cheer");
@@ -186,8 +191,67 @@ public partial class TwitchService_EventSub : RefCounted
     private void ClientEventSubHandleMessage(string type, Dictionary message)
     {
 
-        var newEvent = TwitchEvent.BuildStreamEvent(type, message);
+        var newEvent = BuildStreamEvent(type, message);
         BeepoCore.GetInstance().SendEvent(newEvent, "StreamEvents");
+    }
+
+    public BeepoEvent BuildStreamEvent(string eventType, Dictionary payload)
+    {
+        GD.Print("Got: " + payload);
+        BeepoEvent newEvent = new();
+        switch (eventType)
+        {
+            case "channel.follow":
+                FollowEvent followEvent = new();
+                followEvent.user_name = payload["user_name"].As<string>();
+                newEvent = followEvent;
+                break;
+            case "channel.subscribe":
+                SubscriptionEvent subscriptionEvent = new();
+                subscriptionEvent.user_name = payload["user_name"].As<string>();
+                subscriptionEvent.is_gift = payload["is_gift"].As<bool>();
+                newEvent = subscriptionEvent;
+                break;
+            case "channel.subscription.message":
+                SubscriptionEvent resubEvent = new();
+                resubEvent.user_name = payload["user_name"].As<string>();
+                resubEvent.is_gift = false;
+                newEvent = resubEvent;
+                break;
+            case "channel.subscription.gift":
+                DonationEvent giftSubs = new();
+                giftSubs.type = "subscription";
+                giftSubs.user_name = payload["user_name"].As<string>();
+                giftSubs.total = payload["total"].As<int>();
+                giftSubs.message = "";
+                giftSubs.is_anonymous = payload["is_anonymous"].As<bool>();
+                newEvent = giftSubs;
+                break;
+            case "channel.cheer":
+                DonationEvent cheerEvent = new();
+                cheerEvent.type = "cheer";
+                cheerEvent.user_name = payload["user_name"].As<string>();
+                cheerEvent.total = payload["bits"].As<int>();
+                cheerEvent.message = payload["message"].As<string>();
+                cheerEvent.is_anonymous = payload["is_anonymous"].As<bool>();
+                newEvent = cheerEvent;
+                break;
+            case "channel.channel_points_custom_reward_redemption.add":
+                RedeemEvent redeemEvent = new();
+                redeemEvent.user_name = payload["user_name"].As<string>();
+                redeemEvent.title = payload["reward"].As<Dictionary>()["title"].As<string>();
+                redeemEvent.input = payload["user_input"].As<string>();
+                newEvent = redeemEvent;
+                break;
+            case "channel.raid":
+                RaidEvent raidEvent = new();
+                raidEvent.user_name = payload["from_broadcaster_user_name"].As<string>();
+                raidEvent.viewers = payload["viewers"].As<int>();
+                newEvent = raidEvent;
+                break;
+        }
+
+        return newEvent;
     }
 
     private void ClientEventSubHandleDataReceived()

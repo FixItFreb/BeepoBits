@@ -6,24 +6,15 @@ using System.Collections.Generic;
 public partial class BeepoCore : Node
 {
     [Export] public char commandPrefix = '!';
+    [Export] public bool debugMode = false;
 
     public GDC.Dictionary<StringName, EventDomainNode> eventDomains = new();
-    [Signal] public delegate void OnDebugLogEventHandler(string debugString);
 
     public Camera3D CurrentCamera { get { return GetViewport().GetCamera3D(); } }
 
-    public override void _EnterTree()
-    {
-    }
-
-    public override void _Ready()
-    {
-
-    }
-
     public static BeepoCore GetInstance()
     {
-        return ((SceneTree)Engine.GetMainLoop()).Root.GetNode<BeepoCore>("BeepoBits_Core");
+        return ((SceneTree)Engine.GetMainLoop()).Root.GetNode<BeepoCore>(BeepoBits.SingletonName);
     }
 
     public bool RegisterEventDomain(EventDomainNode newDomain)
@@ -64,9 +55,12 @@ public partial class BeepoCore : Node
 
     }
 
-    public void DebugLog(string debugText)
+    public void Print(params object[] args)
     {
-        GD.Print(Time.GetTimeStringFromSystem() + " : " + debugText);
-        EmitSignal(BeepoCore.SignalName.OnDebugLog, Time.GetTimeStringFromSystem() + " : " + debugText);
+        if (debugMode)
+        {
+            GD.Print(args);
+        }
     }
+
 }

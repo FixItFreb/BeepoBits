@@ -288,6 +288,10 @@ public partial class TwitchService_IRC : RefCounted
             }
         }
     }
+    // username
+    // username color
+    // badges (global and channel)
+    // message (fragments )
 
     private void ClientIRCConnectToTwitch()
     {

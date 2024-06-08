@@ -37,3 +37,7 @@ EventDomainID = &"StreamEvents"
 [node name="TrackingEventsDomain" type="Node" parent="."]
 script = ExtResource("3_22op0")
 EventDomainID = &"TrackingEvents"
+
+[node name="ChatEventsDomain" type="Node" parent="."]
+script = ExtResource("3_22op0")
+EventDomainID = &"ChatEvents"
